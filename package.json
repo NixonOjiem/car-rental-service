@@ -7,7 +7,6 @@
     "client": "npm run dev --prefix client",
     "server": "npm run start --prefix server",
     "dev": "concurrently \"npm run server\" \"npm run client\""
-
   },
   "repository": {
     "type": "git",
@@ -23,5 +22,8 @@
   "description": "",
   "devDependencies": {
     "concurrently": "^9.2.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1"
   }
 }
