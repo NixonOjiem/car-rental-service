@@ -4,7 +4,7 @@ const { MongoClient } = require("mongodb");
 
 // Use logical OR (||) for fallback.
 // It's also common practice to use UPPER_SNAKE_CASE for environment variables.
-const uri = process.env.MONGO_DB_URI || "mongodb://localhost:27017";
+const uri = process.env.MONGO_DB_URI;
 
 // For debugging, you might want to log the URI, but be cautious in production
 // console.log("MongoDB URI:", uri);
