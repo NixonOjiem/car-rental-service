@@ -10,6 +10,12 @@ const userTypeDefs = gql`
     updatedAt: String!
   }
 
+  # This payload is returned on successful authentication
+  type AuthPayload {
+    token: String!
+    user: User!
+  }
+
   type Query {
     # Fetches all users
     users: [User!]!
@@ -18,20 +24,21 @@ const userTypeDefs = gql`
   }
 
   type Mutation {
-    # Creates a new user with manual provider. Password is required for this.
-    createUser(fullname: String!, email: String!, password: String!): User!
-
-    # Creates a new user with Google provider. Google ID is required for this.
-    createGoogleUser(
+    # Renamed for clarity. Handles manual registration.
+    registerUser(
       fullname: String!
       email: String!
-      googleId: String!
-    ): User!
+      password: String!
+    ): AuthPayload!
 
-    # Updates an existing user by ID. All fields are optional.
+    # Handles manual email/password login
+    loginUser(email: String!, password: String!): AuthPayload!
+
+    # Handles Google Sign-In. We find or create the user.
+    loginWithGoogle(googleToken: String!): AuthPayload!
+
+    # These are fine but not the focus of this guide
     updateUser(id: ID!, fullname: String, email: String): User
-
-    # Deletes a user by their ID
     deleteUser(id: ID!): User
   }
 `;
