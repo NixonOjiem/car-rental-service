@@ -19,31 +19,6 @@ async function main() {
     const db = await connectToDatabase(); // Now connectToDatabase is correctly a function
 
     console.log("Database connection established in main function.");
-
-    // Now you have a connected database object.
-    // You can perform operations on your `users` collection.
-    const usersCollection = db.collection("users");
-
-    // Example: Insert a new user document
-    const newUser = {
-      googleId: "101234567890123456789",
-      displayName: "John Doe",
-      email: "john.doe@example.com",
-    };
-
-    const result = await usersCollection.insertOne(newUser);
-    console.log(`User inserted with _id: ${result.insertedId}`);
-
-    // Example: Find a user
-    const foundUser = await usersCollection.findOne({
-      displayName: "John Doe",
-    });
-    console.log("Found user:", foundUser);
-
-    // IMPORTANT: In a real application, you might not want to close the connection immediately after these examples
-    // as your server will still need it for API requests.
-    // Consider adding a graceful shutdown mechanism.
-    // await closeDatabaseConnection(); // Only call this when your app is truly shutting down
   } catch (error) {
     console.error("Application failed:", error);
     // Exit the process if the database connection fails at startup
