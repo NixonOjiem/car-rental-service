@@ -116,19 +116,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useGAuth } from 'vue-google-oauth2';
-import { useMutation, gql } from '@vue/apollo-composable';
+import { ref, getCurrentInstance } from 'vue';
+import { useMutation } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
 import { useAuthStore } from '@/stores/auth';
 
 // --- State and Store ---
 const email = ref('');
 const password = ref('');
 const authStore = useAuthStore();
-const { gAuth } = useGAuth();
+
+// This is how you access plugins like `$gAuth` in the Vue 3 Composition API
+const { proxy } = getCurrentInstance();
 
 // --- GraphQL Mutations ---
-
 // 1. Manual Login Mutation
 const { mutate: loginUser, loading: loginLoading, onError: onLoginError } = useMutation(gql`
   mutation LoginUser($email: String!, $password: String!) {
@@ -157,7 +158,6 @@ const { mutate: loginWithGoogle, loading: googleLoading, onError: onGoogleError 
   }
 `);
 
-
 // --- Event Handlers ---
 
 const handleLogin = async () => {
@@ -182,7 +182,8 @@ const handleLogin = async () => {
 
 const handleGoogleLogin = async () => {
   try {
-    const googleUser = await gAuth.signIn();
+    // Correctly call the signIn method on the global plugin instance
+    const googleUser = await proxy.$gAuth.signIn();
     const token = googleUser.getAuthResponse().id_token;
 
     const result = await loginWithGoogle({ googleToken: token });

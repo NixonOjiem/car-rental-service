@@ -50,8 +50,9 @@
                   d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.62-3.328-11.238-7.989l-6.48,4.78C9.619,39.049,16.208,44,24,44z" />
                 <path fill="#1976D2"
                   d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.219-4.138,5.666c0.001,0.001,0.002,0.003,0.003,0.004l6.19,5.238C36.97,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+                <path d="M1 1h22v22H1z" fill="none"></path>
               </svg>
-              Sign in with Google
+              Sign up with Google
             </button>
           </div>
         </div>
@@ -141,25 +142,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
-import { useGAuth } from 'vue-google-oauth2';
-import { useMutation, gql } from '@vue/apollo-composable';
+import { useMutation } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
 import { useAuthStore } from '@/stores/auth';
 
-//// Component state
+// Component state
 const fullName = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 
-//Hooks
+// Hooks
 const router = useRouter();
-const { gAuth } = useGAuth();
 const authStore = useAuthStore();
 
-// -- GraphQL Mutation --
+// Get the component instance to access the global `$gAuth` plugin
+const { proxy } = getCurrentInstance();
 
+// -- GraphQL Mutation --
 // Manual Registration Mutation
 const { mutate: registerUser, loading: registerLoading, onError: onRegisterError } = useMutation(gql`
   mutation RegisterUser($fullname: String!, $email: String!, $password: String!) {
@@ -188,7 +190,6 @@ const { mutate: loginWithGoogle, loading: googleLoading, onError: onGoogleError 
   }
 `);
 
-
 // -- Methods & Event Handlers --
 const handleRegister = async () => {
   if (password.value !== confirmPassword.value) {
@@ -197,6 +198,11 @@ const handleRegister = async () => {
   }
 
   try {
+    console.log('Attempting to register user:', {
+      fullname: fullName.value,
+      email: email.value,
+      password: password.value,
+    });
     const result = await registerUser({
       fullname: fullName.value,
       email: email.value,
@@ -209,12 +215,14 @@ const handleRegister = async () => {
     }
   } catch (e) {
     // Error is handled by the onError hook below
+    console.error('An unexpected error occurred during registration:', e);
   }
 };
 
 const handleGoogleLogin = async () => {
   try {
-    const googleUser = await gAuth.signIn();
+    // Correctly call the signIn method on the global plugin instance
+    const googleUser = await proxy.$gAuth.signIn();
     const token = googleUser.getAuthResponse().id_token;
 
     const result = await loginWithGoogle({ googleToken: token });
@@ -241,6 +249,5 @@ onGoogleError(error => {
   console.error("Google login error:", error.message);
   alert(`Google login failed: ${error.message}`);
 });
-
 
 </script>

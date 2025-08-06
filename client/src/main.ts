@@ -4,7 +4,6 @@ import { createApp, provide, h } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
-import GAuth from 'vue-google-oauth2'
 
 // Apollo Client imports
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
@@ -40,15 +39,6 @@ const app = createApp({
   },
   render: () => h(App),
 });
-
-
-const gauthOption = {
-  clientId: '1088773727270-h7t9gs2vsg0iqokiuh9pn172gqt6001p.apps.googleusercontent.com',
-  scope: 'profile email',
-  prompt: 'consent',
-  fetch_basic_profile: true
-}
-app.use(GAuth, gauthOption);
 
 app.use(createPinia())
 app.use(router)

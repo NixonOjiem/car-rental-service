@@ -1,8 +1,10 @@
+require("dotenv").config();
 const User = require("../../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
 const { UserInputError } = require("apollo-server-express");
+const mongoose = require("mongoose"); // Add mongoose
 
 // Initialize Google Auth client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -16,14 +18,29 @@ const generateToken = (user) => {
 
 const userResolvers = {
   Query: {
-    // Your existing queries are fine
-    users: async () => await User.find(),
-    user: async (_, { id }) => await User.findById(id),
+    /// Add connection check
+    users: async () => {
+      // Add connection check
+      if (mongoose.connection.readyState !== 1) {
+        throw new Error("Database connection not ready");
+      }
+      return await User.find();
+    },
+    user: async (_, { id }) => {
+      if (mongoose.connection.readyState !== 1) {
+        throw new Error("Database connection not ready");
+      }
+      return await User.findById(id);
+    },
   },
 
   Mutation: {
     // --- Manual Registration ---
     registerUser: async (_, { fullname, email, password }) => {
+      // Check connection state
+      if (mongoose.connection.readyState !== 1) {
+        throw new Error("Database connection not ready");
+      }
       // 1. Check if user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -46,6 +63,9 @@ const userResolvers = {
 
     // --- Manual Login ---
     loginUser: async (_, { email, password }) => {
+      if (mongoose.connection.readyState !== 1) {
+        throw new Error("Database connection not ready");
+      }
       // 1. Find user by email, but also select the password field
       const user = await User.findOne({ email }).select("+password");
       if (!user || user.provider !== "manual") {
@@ -65,6 +85,9 @@ const userResolvers = {
 
     // --- Google Login/Signup ---
     loginWithGoogle: async (_, { googleToken }) => {
+      if (mongoose.connection.readyState !== 1) {
+        throw new Error("Database connection not ready");
+      }
       // 1. Verify the Google token
       let googlePayload;
       try {
