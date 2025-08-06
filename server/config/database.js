@@ -1,7 +1,7 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-const uri = process.env.Mongo_db_uri;
+const uri = process.env.Mongo_db_uri_online;
 
 // Event listeners for connection monitoring
 mongoose.connection.on("connected", () => {
