@@ -3,22 +3,28 @@
     <div class="hero-content">
       <h1>Find Your Perfect Ride</h1>
       <p>
-        Rent the car of your dreams. Unbeatable prices, unlimited miles, and flexible pick-up options. Your next adventure starts here.
+        Rent the car of your dreams. Unbeatable prices, unlimited miles, and flexible pick-up options. Your next
+        adventure starts here.
       </p>
       <button class="cta-button">Browse Our Fleet</button>
     </div>
 
     <div class="hero-image-container">
-      <img
-        src="/images/land_rover_PNG69.png"
-        alt="Blue BMW i8 driving on a wave"
-        class="car-image"
-      />
+      <img src="/images/land_rover_PNG69.png" alt="Blue BMW i8 driving on a wave" class="car-image" />
     </div>
 
-    <div class="wave">
-      <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-17,148.63,10.06,209.1,35.73,48.55,20.6,101.71,32.23,158.42,35.85,53.27,3.35,101.17-23.72,150.48-39.78C1151.71,37.22,1200,42.88,1200,42.88V120H0V42.88c0,0,45.51,3.22,86.86-10.79,34.14-11.45,64.5-24.16,94.49-33.7Z" class="shape-fill"></path>
+    <div class="wave-container">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7)" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
       </svg>
     </div>
   </div>
@@ -31,9 +37,10 @@ export default {
 </script>
 
 <style scoped>
+/* --- ALL YOUR PREVIOUS STYLES (hero-section, hero-content, etc.) REMAIN THE SAME --- */
+
 .hero-section {
   position: relative;
-  /* Navbar is ~88px tall (p-4 + my-2 + content). This padding pushes the content down. */
   padding-top: 85px;
   height: 85vh;
   width: 100%;
@@ -49,7 +56,7 @@ export default {
 
 .hero-content {
   z-index: 10;
-  flex-basis: 50%; /* Take up 50% of the width */
+  flex-basis: 50%;
   color: white;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
 }
@@ -86,7 +93,7 @@ export default {
 }
 
 .hero-image-container {
-  flex-basis: 50%; /* Take up the other 50% */
+  flex-basis: 50%;
   height: 100%;
   position: relative;
 }
@@ -94,7 +101,7 @@ export default {
 .car-image {
   position: absolute;
   z-index: 6;
-  width: 110%; /* Make image slightly larger than its container */
+  width: 110%;
   max-width: 700px;
   bottom: 5vh;
   right: -5%;
@@ -103,30 +110,62 @@ export default {
   user-select: none;
 }
 
-.wave {
+
+/* --- NEW AND IMPROVED WAVE STYLES --- */
+
+/* This is the main container for our new SVG */
+.wave-container {
   position: absolute;
-  bottom: -1px; /* Avoid potential thin line artifact */
+  bottom: 0;
   left: 0;
   width: 100%;
-  overflow: hidden;
-  line-height: 0;
   z-index: 5;
 }
 
-.wave svg {
+.waves {
   position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 150px;
+  width: 100%;
+  height: 15vh;
+  min-height: 100px;
+  max-height: 150px;
 }
 
-.wave .shape-fill {
-  fill: #FFFFFF;
+/* This is the group of <use> tags inside the SVG */
+.parallax > use {
+  /* The 'move-forever' animation is applied here */
+  animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+}
+
+/* We make each wave move at a different speed to create a parallax effect */
+.parallax > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 7s; /* Slower, bigger wave */
+}
+.parallax > use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+.parallax > use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 13s;
+}
+.parallax > use:nth-child(4) {
+  animation-delay: -5s;
+  animation-duration: 20s; /* Faster, smaller wave */
+}
+
+/* The Keyframes for our wave animation */
+@keyframes move-forever {
+  0% {
+   transform: translate3d(-90px,0,0);
+  }
+  100% {
+    transform: translate3d(85px,0,0);
+  }
 }
 
 /* --- Responsive Design --- */
 
-/* For Tablets and smaller laptops */
 @media (max-width: 1024px) {
   .hero-content h1 {
     font-size: 3.2rem;
@@ -139,21 +178,20 @@ export default {
   }
 }
 
-/* For mobile phones */
 @media (max-width: 767px) {
   .hero-section {
-    flex-direction: column; /* Stack content on top of image */
-    justify-content: flex-start; /* Align content to the top */
+    flex-direction: column;
+    justify-content: flex-start;
     text-align: center;
     height: auto;
-    min-height: 100vh; /* Ensure it still takes up the full screen */
-    padding-bottom: 200px; /* Add space at the bottom for the wave and car */
+    min-height: 100vh;
+    padding-bottom: 200px;
   }
 
   .hero-content {
-    flex-basis: auto; /* Let content size itself */
+    flex-basis: auto;
     width: 100%;
-    margin-top: 5vh; /* Add some space from the top */
+    margin-top: 5vh;
   }
 
   .hero-content p {
@@ -164,23 +202,25 @@ export default {
   .hero-image-container {
     flex-basis: auto;
     width: 100%;
-    position: absolute; /* Keep it absolute to position relative to hero-section */
+    position: absolute;
     bottom: 0;
     left: 0;
-    height: 300px; /* Give it an explicit height */
+    height: 300px;
   }
 
   .car-image {
     position: absolute;
     width: 90%;
     max-width: 450px;
-    bottom: 80px; /* Position it on top of the wave */
+    bottom: 80px;
     left: 50%;
-    transform: translateX(-50%) rotate(0deg); /* Center it and reset rotation */
+    transform: translateX(-50%) rotate(0deg);
   }
 
-  .wave svg {
-    height: 100px; /* Make wave smaller on mobile */
+  /* Adjust wave height on mobile */
+  .waves {
+    height: 10vh;
+    min-height: 80px;
   }
 }
 </style>
