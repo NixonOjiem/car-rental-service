@@ -1,7 +1,7 @@
 // models/User.js
 
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs"); // Don't forget to install this package: npm install bcryptjs
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
   {

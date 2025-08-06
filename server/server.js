@@ -1,11 +1,20 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const { ApolloServer } = require("apollo-server-express");
+const mongoose = require("mongoose"); // Add mongoose
 
 const app = express();
 const port = process.env.Port || 3000;
 
-// CORRECTED LINE: Use destructuring to get connectToDatabase
+// Importing type definitions and resolvers
+const { mergeTypeDefs } = require("@graphql-tools/merge");
+const { mergeResolvers } = require("@graphql-tools/merge");
+const { userTypeDefs } = require("./graphql/schema/user.schema");
+const { userResolvers } = require("./graphql/resolvers/user.resolver");
+const typeDefs = mergeTypeDefs([userTypeDefs]);
+const resolvers = mergeResolvers([userResolvers]);
+
 const {
   connectToDatabase,
   closeDatabaseConnection,
@@ -16,37 +25,52 @@ app.use(express.json());
 
 async function main() {
   try {
-    const db = await connectToDatabase(); // Now connectToDatabase is correctly a function
+    // 1. Connect to database first
+    await connectToDatabase();
 
-    console.log("Database connection established in main function.");
+    // 2. Initialize Apollo Server AFTER DB connection
+    const apolloServer = new ApolloServer({
+      typeDefs,
+      resolvers,
+      context: () => {
+        // Add DB connection check to context
+        if (mongoose.connection.readyState !== 1) {
+          throw new Error("Database connection not ready");
+        }
+      },
+    });
+
+    await apolloServer.start();
+    apolloServer.applyMiddleware({ app, path: "/gql" });
+
+    app.get("/api/message", (req, res) => {
+      res.json({ message: "Hello from the Node.js server!" });
+    });
+
+    // 3. Start server LAST
+    app.listen(port, () => {
+      console.log(`🚀 Server running on http://localhost:${port}`);
+      console.log(
+        `🚀 GraphQL endpoint: http://localhost:${port}${apolloServer.graphqlPath}`
+      );
+    });
   } catch (error) {
-    console.error("Application failed:", error);
-    // Exit the process if the database connection fails at startup
+    console.error("❌ Application failed:", error);
     process.exit(1);
   }
 }
 
-// Call main to connect to the database and perform initial operations
 main();
 
-// Basic API endpoint
-app.get("/api/message", (req, res) => {
-  res.json({ message: "Hello from the Node.js server!" });
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
-
-// Graceful shutdown for database connection
+// Graceful shutdown handlers
 process.on("SIGINT", async () => {
-  console.log("SIGINT signal received: closing MongoDB connection.");
+  console.log("SIGINT received: closing connections");
   await closeDatabaseConnection();
   process.exit(0);
 });
 
 process.on("SIGTERM", async () => {
-  console.log("SIGTERM signal received: closing MongoDB connection.");
+  console.log("SIGTERM received: closing connections");
   await closeDatabaseConnection();
   process.exit(0);
 });
