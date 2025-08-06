@@ -10,7 +10,7 @@
     </div>
 
     <div class="hero-image-container">
-      <img src="/images/land_rover_PNG69.png" alt="Blue BMW i8 driving on a wave" class="car-image" />
+      <img src="/images/land_rover_PNG69.png" alt="Grey Land Rover" class="car-image" />
     </div>
 
     <div class="wave-container">
