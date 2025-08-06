@@ -59,6 +59,11 @@
                 Remember your password?
                 <router-link to="/login" class="font-medium text-[#0056D2] hover:text-indigo-500 hover:underline">Sign In</router-link>
             </p>
+            <p class="mt-2 text-sm text-gray-600">
+            <router-link to="/" class="font-medium text-[#0056D2] hover:text-indigo-500 hover:underline">
+              Go back home
+            </router-link>
+          </p>
         </div>
       </div>
     </div>

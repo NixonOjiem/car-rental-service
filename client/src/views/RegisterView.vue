@@ -18,9 +18,9 @@
     <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
       <div class="max-w-md w-full">
         <div class="text-center mb-8">
-            <h2 class="text-4xl font-bold text-gray-900">
-              <span class="text-[#0056D2]">CarGo</span> Rentals
-            </h2>
+          <h2 class="text-4xl font-bold text-gray-900">
+            <span class="text-[#0056D2]">CarGo</span> Rentals
+          </h2>
         </div>
 
         <h3 class="text-2xl font-bold text-gray-800 text-center mb-2">Create Your Account</h3>
@@ -30,7 +30,7 @@
           <div class="mb-4">
             <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
             <div class="relative">
-               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                 </svg>
@@ -50,7 +50,7 @@
           </div>
 
           <div class="mb-4">
-             <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" /></svg>
@@ -60,7 +60,7 @@
           </div>
 
           <div class="mb-6">
-             <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" /></svg>
@@ -77,10 +77,15 @@
         </form>
 
         <div class="mt-8 text-center">
-            <p class="text-sm text-gray-600">
-                Already have an account?
-                <router-link to="/login" class="font-medium text-[#0056D2] hover:text-indigo-500 hover:underline">Sign In</router-link>
-            </p>
+          <p class="text-sm text-gray-600">
+            Already have an account?
+            <router-link to="/login" class="font-medium text-[#0056D2] hover:text-indigo-500 hover:underline">Sign In</router-link>
+          </p>
+          <p class="mt-2 text-sm text-gray-600">
+            <router-link to="/" class="font-medium text-[#0056D2] hover:text-indigo-500 hover:underline">
+              Go back home
+            </router-link>
+          </p>
         </div>
       </div>
     </div>
@@ -89,11 +94,14 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'; // Import useRouter
 
 const fullName = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+
+const router = useRouter(); // Initialize router instance
 
 const handleRegister = () => {
   if (password.value !== confirmPassword.value) {
@@ -109,5 +117,7 @@ const handleRegister = () => {
   });
 
   alert(`Account created for ${fullName.value}! (Check console for details)`);
+  // Optional: Redirect to a different page after successful registration
+  // router.push('/');
 };
 </script>
