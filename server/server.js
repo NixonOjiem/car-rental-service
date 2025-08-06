@@ -26,7 +26,7 @@ app.use(express.json());
 async function main() {
   try {
     const db = await connectToDatabase(); // Now connectToDatabase is correctly a function
-    console.log("Database connection established in main function.");
+    console.log("✅Database connection established in main function.");
 
     // Initialize Apollo Server
     const apolloServer = new ApolloServer({
@@ -46,13 +46,13 @@ async function main() {
 
     // Listen on the specified port
     app.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`);
+      console.log(`🚀Server is running on http://localhost:${port}`);
       console.log(
-        `GraphQL endpoint is at http://localhost:${port}${apolloServer.graphqlPath}`
+        `🚀GraphQL endpoint is at http://localhost:${port}${apolloServer.graphqlPath}`
       );
     });
   } catch (error) {
-    console.error("Application failed:", error);
+    console.error("❌Application failed:", error);
     // Exit the process if the database connection fails at startup
     process.exit(1);
   }
