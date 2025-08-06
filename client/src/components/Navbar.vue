@@ -3,7 +3,7 @@
     <nav class="navbar flex items-center justify-between bg-black text-white p-4 mx-4 my-2 shadow-md font-sans rounded-lg">
       <div class="nav-logo flex items-center space-x-2">
         <img class="h-10 w-10 object-cover" src="@/assets/logo.svg" alt="Logo" />
-        <span class="font-bold text-xl">Car Rental Kenya</span>
+        <span class="font-bold text-xl">CarGo Rental </span>
       </div>
 
       <div class="nav-links">
@@ -17,12 +17,12 @@
       </div>
 
       <div class="nav-cta flex items-center space-x-8">
-        <button class="btn btn-primary border border-[#FFC300] text-[#FFC300] hover:border hover:border-[#FFC300] hover:text-[#FFC300] px-4 py-2 rounded-sm bg-transparent">
+        <router-link to="/login" class="btn btn-primary border border-[#FFC300] text-[#FFC300] hover:border hover:border-[#FFC300] hover:text-[#FFC300] px-4 py-2 rounded-sm bg-transparent">
           Sign In
-        </button>
-        <button class="btn btn-secondary bg-[#FFC300] px-4 py-2 text-white rounded-sm">
+        </router-link>
+        <router-link to="/register" class="btn btn-secondary bg-[#FFC300] px-4 py-2 text-white rounded-sm">
           Get Started
-        </button>
+        </router-link>
       </div>
     </nav>
   </header>
