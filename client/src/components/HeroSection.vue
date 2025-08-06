@@ -42,7 +42,7 @@ export default {
 .hero-section {
   position: relative;
   padding-top: 85px;
-  height: 85vh;
+  height: 75vh;
   width: 100%;
   display: flex;
   align-items: center;
@@ -131,36 +131,42 @@ export default {
 }
 
 /* This is the group of <use> tags inside the SVG */
-.parallax > use {
+.parallax>use {
   /* The 'move-forever' animation is applied here */
-  animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+  animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
 }
 
 /* We make each wave move at a different speed to create a parallax effect */
-.parallax > use:nth-child(1) {
+.parallax>use:nth-child(1) {
   animation-delay: -2s;
-  animation-duration: 7s; /* Slower, bigger wave */
+  animation-duration: 7s;
+  /* Slower, bigger wave */
 }
-.parallax > use:nth-child(2) {
+
+.parallax>use:nth-child(2) {
   animation-delay: -3s;
   animation-duration: 10s;
 }
-.parallax > use:nth-child(3) {
+
+.parallax>use:nth-child(3) {
   animation-delay: -4s;
   animation-duration: 13s;
 }
-.parallax > use:nth-child(4) {
+
+.parallax>use:nth-child(4) {
   animation-delay: -5s;
-  animation-duration: 20s; /* Faster, smaller wave */
+  animation-duration: 20s;
+  /* Faster, smaller wave */
 }
 
 /* The Keyframes for our wave animation */
 @keyframes move-forever {
   0% {
-   transform: translate3d(-90px,0,0);
+    transform: translate3d(-90px, 0, 0);
   }
+
   100% {
-    transform: translate3d(85px,0,0);
+    transform: translate3d(85px, 0, 0);
   }
 }
 
@@ -170,11 +176,28 @@ export default {
   .hero-content h1 {
     font-size: 3.2rem;
   }
+
   .hero-content p {
     font-size: 1.1rem;
   }
+
   .car-image {
     max-width: 550px;
+  }
+
+  .hero-section {
+    position: relative;
+    padding-top: 85px;
+    height: 48vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    background: linear-gradient(45deg, #0077b6, #00b4d8, #90e0ef);
+    overflow: hidden;
+    box-sizing: border-box;
   }
 }
 
@@ -184,7 +207,7 @@ export default {
     justify-content: flex-start;
     text-align: center;
     height: auto;
-    min-height: 100vh;
+    min-height: 85vh;
     padding-bottom: 200px;
   }
 

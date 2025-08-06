@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-screen overflow-hidden">
+  <div class="relative w-full h-screen">
     <Navbar />
     <HeroSection />
   </div>
