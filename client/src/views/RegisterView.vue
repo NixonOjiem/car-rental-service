@@ -144,58 +144,71 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useGAuth } from 'vue-google-oauth2';
+import { useMutation, gql } from '@vue/apollo-composable';
+import { useAuthStore } from '@/stores/auth';
 
+//// Component state
 const fullName = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 
+//Hooks
 const router = useRouter();
 const { gAuth } = useGAuth();
+const authStore = useAuthStore();
 
+// -- GraphQL Mutation --
+
+// Manual Registration Mutation
+const { mutate: registerUser, loading: registerLoading, onError: onRegisterError } = useMutation(gql`
+  mutation RegisterUser($fullname: String!, $email: String!, $password: String!) {
+    registerUser(fullname: $fullname, email: $email, password: $password) {
+      token
+      user {
+        id
+        fullname
+        email
+      }
+    }
+  }
+`);
+
+// Google Login Mutation
+const { mutate: loginWithGoogle, loading: googleLoading, onError: onGoogleError } = useMutation(gql`
+  mutation LoginWithGoogle($googleToken: String!) {
+    loginWithGoogle(googleToken: $googleToken) {
+      token
+      user {
+        id
+        fullname
+        email
+      }
+    }
+  }
+`);
+
+
+// -- Methods & Event Handlers --
 const handleRegister = async () => {
   if (password.value !== confirmPassword.value) {
     alert("Passwords do not match!");
     return;
   }
 
-  const REGISTER_MUTATION = `
-    mutation CreateUser($fullname: String!, $email: String!, $password: String!) {
-      createUser(fullname: $fullname, email: $email, password: $password) {
-        id
-        fullname
-        email
-      }
-    }
-  `;
-
   try {
-    // Corrected fetch URL to use your GraphQL endpoint
-    const response = await fetch('http://localhost:3000/gql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: REGISTER_MUTATION,
-        variables: {
-          fullname: fullName.value,
-          email: email.value,
-          password: password.value,
-        },
-      }),
+    const result = await registerUser({
+      fullname: fullName.value,
+      email: email.value,
+      password: password.value,
     });
 
-    const result = await response.json();
-    if (result.data && result.data.createUser) {
-      alert(`Account created for ${result.data.createUser.fullname}!`);
-      router.push('/login');
-    } else {
-      alert(`Registration failed: ${result.errors[0].message}`);
+    if (result && result.data.registerUser) {
+      authStore.setAuthData(result.data.registerUser);
+      alert(`Welcome, ${result.data.registerUser.user.fullname}!`);
     }
-  } catch (error) {
-    console.error('Error during registration:', error);
-    alert('An unexpected error occurred.');
+  } catch (e) {
+    // Error is handled by the onError hook below
   }
 };
 
@@ -204,31 +217,30 @@ const handleGoogleLogin = async () => {
     const googleUser = await gAuth.signIn();
     const token = googleUser.getAuthResponse().id_token;
 
-    const response = await fetch('http://localhost:3000/api/auth/google', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-    });
+    const result = await loginWithGoogle({ googleToken: token });
 
-    const data = await response.json();
-    if (response.ok) {
-      console.log('User signed in with Google:', data);
-      localStorage.setItem('authToken', data.token);
-      alert('Successfully logged in with Google!');
-      router.push('/');
-    } else {
-      console.error('Backend authentication failed:', data.message);
-      alert('Google login failed.');
+    if (result && result.data.loginWithGoogle) {
+      authStore.setAuthData(result.data.loginWithGoogle);
+      alert(`Welcome, ${result.data.loginWithGoogle.user.fullname}!`);
     }
   } catch (error) {
-    console.error('Google login failed:', error);
-    if (error.error === 'popup_closed_by_user') {
-      console.log('User closed the Google login popup.');
-    } else {
-      alert('An error occurred during Google login.');
+    console.error('Google login process failed:', error);
+    if (error?.error !== 'popup_closed_by_user') {
+      alert('An error occurred during Google sign-in.');
     }
   }
 };
+
+// --- Error Handling Hooks ---
+onRegisterError(error => {
+  console.error("Registration error:", error.message);
+  alert(`Registration failed: ${error.message}`);
+});
+
+onGoogleError(error => {
+  console.error("Google login error:", error.message);
+  alert(`Google login failed: ${error.message}`);
+});
+
+
 </script>
