@@ -1,53 +1,43 @@
-require("dotenv").config(); // Load environment variables from .env file
+require("dotenv").config();
+const mongoose = require("mongoose");
 
-const { MongoClient } = require("mongodb");
+const uri = process.env.Mongo_db_uri_online;
 
-// Use logical OR (||) for fallback.
-// It's also common practice to use UPPER_SNAKE_CASE for environment variables.
-const uri = process.env.MONGO_DB_URI;
+// Event listeners for connection monitoring
+mongoose.connection.on("connected", () => {
+  console.log("✅ Mongoose connected to DB");
+  console.log("Connected to database:", mongoose.connection.name);
+});
+mongoose.connection.on("error", (err) =>
+  console.error("❌ Mongoose connection error:", err)
+);
+mongoose.connection.on("disconnected", () =>
+  console.log("ℹ️ Mongoose disconnected")
+);
 
-// For debugging, you might want to log the URI, but be cautious in production
-// console.log("MongoDB URI:", uri);
-
-// Create a new MongoClient instance
-const client = new MongoClient(uri);
-
-/**
- * Connects to the MongoDB database.
- * @returns {Promise<Db>} The connected database instance.
- * @throws {Error} If the connection fails.
- */
 async function connectToDatabase() {
   try {
-    // Connect the client to the server
-    await client.connect();
-    console.log("Connected successfully to MongoDB!");
-
-    // Access your database
-    const db = client.db("carRentalservice");
-    return db;
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000, // 30 seconds timeout
+      socketTimeoutMS: 45000, // 45 seconds socket timeout
+    });
+    console.log("✅ Database connection established");
+    return mongoose.connection;
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-    // Re-throw the error so calling code can handle it
+    console.error("❌ Database connection failed:", error);
     throw error;
   }
 }
 
-/**
- * Closes the MongoDB client connection.
- */
 async function closeDatabaseConnection() {
   try {
-    await client.close();
-    console.log("MongoDB connection closed.");
+    await mongoose.disconnect();
+    console.log("✅ Database connection closed");
   } catch (error) {
-    console.error("Error closing MongoDB connection:", error);
+    console.error("❌ Error closing database connection:", error);
   }
 }
 
-// Export the connection function and optionally the client/close function
-module.exports = {
-  connectToDatabase,
-  client, // Export client if you need direct access to it elsewhere
-  closeDatabaseConnection, // Export close function for graceful shutdown
-};
+module.exports = { connectToDatabase, closeDatabaseConnection };
