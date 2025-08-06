@@ -18,21 +18,22 @@ async function main() {
   try {
     const db = await connectToDatabase(); // Now connectToDatabase is correctly a function
 
-    console.log("Database connection established in main function.");
+    console.log("Database connection established in main function.", db);
 
     // Now you have a connected database object.
     // You can perform operations on your `users` collection.
     const usersCollection = db.collection("users");
+    console.log("Users collection:", usersCollection.users);
 
     // Example: Insert a new user document
-    const newUser = {
-      googleId: "101234567890123456789",
-      displayName: "John Doe",
-      email: "john.doe@example.com",
-    };
+    // const newUser = {
+    //   googleId: "101234567890123456789",
+    //   displayName: "John Doe",
+    //   email: "john.doe@example.com",
+    // };
 
-    const result = await usersCollection.insertOne(newUser);
-    console.log(`User inserted with _id: ${result.insertedId}`);
+    // const result = await usersCollection.insertOne(newUser);
+    // console.log(`User inserted with _id: ${result.insertedId}`);
 
     // Example: Find a user
     const foundUser = await usersCollection.findOne({
