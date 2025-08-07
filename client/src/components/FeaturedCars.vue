@@ -68,19 +68,19 @@ export default {
       featuredCars: [
         {
           id: 1,
-          name: 'Tesla Model S Plaid',
+          name: 'Mazda MX-30',
           description: 'A cutting-edge electric sedan, perfect for tech-savvy drivers seeking performance and sustainability.',
           price: 180,
           specs: { transmission: 'Automatic', seats: 5, fuel: 'Electric' },
-          imageUrl: '/images/tesla_model_s.png', // Note: Use your actual image paths
+          imageUrl: '/images/mazda_PNG9.png', // Note: Use your actual image paths
         },
         {
           id: 2,
-          name: 'Ford Mustang GT',
+          name: 'Mazda CX-5 Miata',
           description: 'Unleash the raw power of a legendary muscle car. A symbol of freedom and performance on the open road.',
           price: 120,
           specs: { transmission: 'Manual', seats: 4, fuel: 'Gasoline' },
-          imageUrl: '/images/ford_mustang.png',
+          imageUrl: '/images/mazda_PNG130.png',
         },
         {
           id: 3,
