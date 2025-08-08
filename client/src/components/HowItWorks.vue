@@ -1,5 +1,5 @@
 <template>
-  <section id="how-it-works" class="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+  <section id="how-it-works" class="py-20 px-4 sm:px-6 lg:px-8 bg-white">
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
       <!-- Left Section: Image -->
       <div class="relative w-full lg:w-1/2 flex justify-center items-center p-6 rounded-3xl shadow-xl"
@@ -71,7 +71,7 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'HowItWorks',
 };

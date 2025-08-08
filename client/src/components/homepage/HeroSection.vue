@@ -55,7 +55,7 @@ export default {
 }
 
 .hero-content {
-  z-index: 10;
+  z-index: 99;
   flex-basis: 50%;
   color: white;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
