@@ -12,17 +12,18 @@
       :description="'Explore our extensive documentation and see how our tools can transform your workflow.'"
       :buttonText="'Read the Docs'" :link="'/docs'" />
     <FaqSection />
+    <FooterComponent />
   </div>
 </template>
 <script lang="ts">
-import Navbar from '../components/Navbar.vue'
+import Navbar from '../components/layouts/NavbarComponent.vue'
 import HeroSection from '../components/homepage/HeroSection.vue'
-import HowItWorks from '../components/HowItWorks.vue'
+import HowItWorks from '../components/homepage/HowItWorks.vue'
 import FeaturedCars from '../components/homepage/FeaturedCars.vue'
-// import BenefitsSection from '../components/homepage/BenefitsSection.vue'
 import SecondaryCTA from '../components/homepage/SecondaryCTA.vue'
 import FaqSection from '../components/homepage/FaqSection.vue'
 import TestimonialsSection from '../components/homepage/TestimonialsSection.vue'
+import FooterComponent from '../components/layouts/FooterComponent.vue'
 export default {
   name: 'IndexView',
   components: {
@@ -31,9 +32,9 @@ export default {
     HowItWorks,
     FeaturedCars,
     TestimonialsSection,
-    // BenefitsSection,
     SecondaryCTA,
     FaqSection,
+    FooterComponent
   },
   data() {
     return {
