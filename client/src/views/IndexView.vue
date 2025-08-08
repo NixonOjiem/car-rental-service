@@ -4,12 +4,13 @@
     <HeroSection />
     <HowItWorks />
     <FeaturedCars />
-    <BenefitsSection
-      :title="'Our Value Proposition'"
+    <BenefitsSection :title="'Our Value Proposition'"
       :description="'We help you simplify complex tasks, save time, and boost your productivity. Our platform is designed to streamline your workflow so you can focus on what matters most.'"
-      :benefits="benefitsData"
-    />
+      :benefits="benefitsData" />
     <TestimonialsSection />
+    <SecondaryCTA :title="'Ready to dive deeper?'"
+      :description="'Explore our extensive documentation and see how our tools can transform your workflow.'"
+      :buttonText="'Read the Docs'" :link="'/docs'" />
     <FaqSection />
 
     <div class="h-[100vh] bg-red-200 w-[100vw] "></div>
@@ -21,6 +22,7 @@ import HeroSection from '../components/homepage/HeroSection.vue'
 import HowItWorks from '../components/HowItWorks.vue'
 import FeaturedCars from '../components/homepage/FeaturedCars.vue'
 import BenefitsSection from '../components/homepage/BenefitsSection.vue'
+import SecondaryCTA from '../components/homepage/SecondaryCTA.vue'
 import FaqSection from '../components/homepage/FaqSection.vue'
 import TestimonialsSection from '../components/homepage/TestimonialsSection.vue'
 export default {
@@ -32,9 +34,10 @@ export default {
     FeaturedCars,
     TestimonialsSection,
     BenefitsSection,
+    SecondaryCTA,
     FaqSection,
   },
-   data() {
+  data() {
     return {
       benefitsData: [
         {
@@ -50,8 +53,8 @@ export default {
           description: 'Connect with your existing tools and services effortlessly.'
         }
       ]
-      };
-    }
+    };
+  }
 }
 </script>
 <style></style>

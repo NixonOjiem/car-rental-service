@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-slate-900 py-20">
+  <section class="bg-white py-20">
     <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
