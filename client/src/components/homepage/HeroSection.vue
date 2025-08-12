@@ -102,7 +102,7 @@ export default {
   position: absolute;
   z-index: 6;
   width: 110%;
-  max-width: 700px;
+  /* max-width: 700px; */
   bottom: 5vh;
   right: -5%;
   transform: rotate(-4deg);
