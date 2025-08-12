@@ -11,76 +11,82 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import { defineComponent } from 'vue'
 import CarCard from './CarCard.vue'
 import type { Car } from '../../types/Marketplace'
 
-const cars: Car[] = [
-  {
-    id: 1,
-    brand: 'Toyota',
-    model: 'Corolla',
-    type: 'Sedan',
-    image: '/images/cars/corolla.jpg',
-    pricePerDay: 5500,
-    seats: 5,
-    transmission: 'Automatic',
-    fuel: 'Petrol',
-    location: 'Nairobi',
-    isAvailable: true,
-    rating: 4.6,
+export default defineComponent({
+  name: 'CarGrid',
+  components: { CarCard },
+  data() {
+    return {
+      cars: [ {
+          id: 1,
+          brand: 'Toyota',
+          model: 'Corolla',
+          type: 'Sedan',
+          image: '/images/cars/corolla.jpg',
+          pricePerDay: 5500,
+          seats: 5,
+          transmission: 'Automatic',
+          fuel: 'Petrol',
+          location: 'Nairobi',
+          isAvailable: true,
+          rating: 4.6,
+        },
+        {
+          id: 2,
+          brand: 'Tesla',
+          model: 'Model Y',
+          type: 'Electric',
+          image: '/images/cars/model-y.jpg',
+          pricePerDay: 12500,
+          seats: 5,
+          transmission: 'Automatic',
+          fuel: 'Electric',
+          location: 'Nairobi',
+          isAvailable: false,
+          rating: 4.9,
+        },
+        {
+          id: 3,
+          brand: 'Subaru',
+          model: 'Forester',
+          type: 'SUV',
+          image: '/images/cars/forester.jpg',
+          pricePerDay: 8000,
+          seats: 5,
+          transmission: 'Automatic',
+          fuel: 'Petrol',
+          location: 'Mombasa',
+          isAvailable: true,
+          rating: 4.4,
+        },
+        {
+          id: 4,
+          brand: 'Nissan',
+          model: 'Note',
+          type: 'Hatchback',
+          image: '/images/cars/note.jpg',
+          pricePerDay: 4500,
+          seats: 5,
+          transmission: 'Automatic',
+          fuel: 'Hybrid',
+          location: 'Kisumu',
+          isAvailable: true,
+          rating: 4.2,
+        },] as Car[],
+    }
   },
-  {
-    id: 2,
-    brand: 'Tesla',
-    model: 'Model Y',
-    type: 'Electric',
-    image: '/images/cars/model-y.jpg',
-    pricePerDay: 12500,
-    seats: 5,
-    transmission: 'Automatic',
-    fuel: 'Electric',
-    location: 'Nairobi',
-    isAvailable: false,
-    rating: 4.9,
+  methods: {
+    onBook(car: Car) {
+      console.log('Book:', car.id)
+    },
+    onView(car: Car) {
+      console.log('View:', car.id)
+    },
   },
-  {
-    id: 3,
-    brand: 'Subaru',
-    model: 'Forester',
-    type: 'SUV',
-    image: '/images/cars/forester.jpg',
-    pricePerDay: 8000,
-    seats: 5,
-    transmission: 'Automatic',
-    fuel: 'Petrol',
-    location: 'Mombasa',
-    isAvailable: true,
-    rating: 4.4,
-  },
-  {
-    id: 4,
-    brand: 'Nissan',
-    model: 'Note',
-    type: 'Hatchback',
-    image: '/images/cars/note.jpg',
-    pricePerDay: 4500,
-    seats: 5,
-    transmission: 'Automatic',
-    fuel: 'Hybrid',
-    location: 'Kisumu',
-    isAvailable: true,
-    rating: 4.2,
-  },
-]
-
-function onBook(car: Car) {
-  // Replace with your booking flow (e.g., open modal, route, or emit upwards)
-  console.log('Book:', car.id, car.brand, car.model)
-}
-
-function onView(car: Car) {
-  // Replace with opening a detail modal/drawer
-  console.log('View details:', car.id)
-}
+})
 </script>
+
