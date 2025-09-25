@@ -10,7 +10,7 @@
     </div>
 
     <div class="hero-image-container">
-      <img src="/images/land_rover_PNG69.png" alt="Blue BMW i8 driving on a wave" class="car-image" />
+      <img src="/images/land_rover_PNG69.png" alt="Grey Land Rover" class="car-image" />
     </div>
 
     <div class="wave-container">
@@ -30,7 +30,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'HeroSection',
 }
@@ -55,7 +55,7 @@ export default {
 }
 
 .hero-content {
-  z-index: 10;
+  z-index: 99;
   flex-basis: 50%;
   color: white;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
@@ -102,7 +102,7 @@ export default {
   position: absolute;
   z-index: 6;
   width: 110%;
-  max-width: 700px;
+  /* max-width: 700px; */
   bottom: 5vh;
   right: -5%;
   transform: rotate(-4deg);

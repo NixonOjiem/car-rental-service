@@ -74,11 +74,11 @@
 }
 </style>
 
-<script>
+<script lang="ts">
 // The asset import is not needed in the script block for Vite/Vue CLI to work with an <img> src.
 // import '@/assets/logo.svg'
 export default {
-  name: 'Navbar',
+  name: 'NavbarComponent',
 }
 </script>
 
