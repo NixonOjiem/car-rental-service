@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <section class="bg-gray-50 py-16">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-xl mx-auto text-center">
@@ -51,4 +51,4 @@ export default {
     },
   },
 };
-</script>
+</script> -->

@@ -102,17 +102,20 @@ const userResolvers = {
 
       const { email, name, sub: googleId } = googlePayload;
 
-      // 2. Find or create the user ("upsert" logic)
+      // 2. Find or create the user
       let user = await User.findOne({ email });
 
       if (user) {
-        // If user exists but signed up manually, throw error
+        // --- THIS IS THE UPDATED LOGIC ---
+        // User exists. If they signed up manually, link their Google account.
         if (user.provider === "manual") {
-          throw new UserInputError(
-            "This email is registered with a password. Please log in manually."
-          );
+          user.googleId = googleId;
+          user.provider = "google"; // Update their provider
+          // You might also want to update their name if it's different
+          // user.fullname = name;
+          await user.save(); // Save the changes
         }
-        // If they are a google user, we just log them in
+        // If they were already a google user, we just proceed.
       } else {
         // If user does not exist, create a new one
         const newUser = new User({

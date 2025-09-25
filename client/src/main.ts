@@ -4,6 +4,7 @@ import { createApp, provide, h } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
+import gAuthPlugin from 'vue3-google-oauth2';
 
 // Apollo Client imports
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core'
@@ -12,7 +13,8 @@ import { DefaultApolloClient } from '@vue/apollo-composable'
 
 // --- Apollo Client Configuration ---
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3000/gql', // Your GraphQL endpoint
+  uri: import.meta.env.VITE_GRAPHQL_URI,
+  //uri: 'http://localhost:3000/gql', // Your GraphQL endpoint
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -40,7 +42,15 @@ const app = createApp({
   render: () => h(App),
 });
 
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
 app.use(createPinia())
 app.use(router)
+// Configure and use the plugin
+app.use(gAuthPlugin, {
+  clientId: GOOGLE_CLIENT_ID,
+  scope: 'email profile openid',
+  prompt: 'consent'
+});
 
 app.mount('#app')
