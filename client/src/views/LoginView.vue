@@ -1,9 +1,9 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex text-gray-800">
     <div class="relative hidden lg:flex lg:w-1/2 items-center justify-center bg-gray-800">
-      <div class="absolute inset-0 bg-cover bg-center"
-        style="background-image: url('https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?q=80&w=2500&auto=format&fit=crop');">
-      </div>
+      <div class="absolute inset-0 bg-cover bg-center" style="
+          background-image: url('https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?q=80&w=2500&auto=format&fit=crop');
+        "></div>
       <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60"></div>
 
       <div class="relative z-10 text-center text-white p-12">
@@ -77,7 +77,7 @@
         </div>
 
         <div>
-          <button @click="handleGoogleLogin" :disabled="googleLoading"
+          <button @click="handleGoogleLoginDirect" :disabled="googleLoading"
             class="w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition disabled:opacity-50">
             <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -116,22 +116,26 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance } from 'vue';
-import { useMutation } from '@vue/apollo-composable';
-import gql from 'graphql-tag';
-import { useAuthStore } from '@/stores/auth';
+import { ref, getCurrentInstance } from 'vue'
+import { useMutation } from '@vue/apollo-composable'
+import gql from 'graphql-tag'
+import { useAuthStore } from '@/stores/auth'
 
 // --- State and Store ---
-const email = ref('');
-const password = ref('');
-const authStore = useAuthStore();
+const email = ref('')
+const password = ref('')
+const authStore = useAuthStore()
 
 // This is how you access plugins like `$gAuth` in the Vue 3 Composition API
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance()
 
 // --- GraphQL Mutations ---
 // 1. Manual Login Mutation
-const { mutate: loginUser, loading: loginLoading, onError: onLoginError } = useMutation(gql`
+const {
+  mutate: loginUser,
+  loading: loginLoading,
+  onError: onLoginError,
+} = useMutation(gql`
   mutation LoginUser($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {
       token
@@ -142,10 +146,14 @@ const { mutate: loginUser, loading: loginLoading, onError: onLoginError } = useM
       }
     }
   }
-`);
+`)
 
 // 2. Google Login/Signup Mutation
-const { mutate: loginWithGoogle, loading: googleLoading, onError: onGoogleError } = useMutation(gql`
+const {
+  mutate: loginWithGoogle,
+  loading: googleLoading,
+  onError: onGoogleError,
+} = useMutation(gql`
   mutation LoginWithGoogle($googleToken: String!) {
     loginWithGoogle(googleToken: $googleToken) {
       token
@@ -156,63 +164,96 @@ const { mutate: loginWithGoogle, loading: googleLoading, onError: onGoogleError 
       }
     }
   }
-`);
+`)
 
 // --- Event Handlers ---
-
 const handleLogin = async () => {
-  if (!email.value || !password.value) return; // Basic validation
+  if (!email.value || !password.value) return // Basic validation
 
   try {
     const result = await loginUser({
       email: email.value,
-      password: password.value
-    });
+      password: password.value,
+    })
 
     if (result && result.data.loginUser) {
       // On success, use Pinia store to save data and redirect
-      authStore.setAuthData(result.data.loginUser);
-      alert(`Welcome back, ${result.data.loginUser.user.fullname}!`);
+      authStore.setAuthData(result.data.loginUser)
+      alert(`Welcome back, ${result.data.loginUser.user.fullname}!`)
     }
   } catch (e) {
     // Errors are handled by the onError hook, so this catch is for any other unexpected issues.
-    console.error("An unexpected error occurred during login:", e);
+    console.error('An unexpected error occurred during login:', e)
   }
-};
+}
 
-const handleGoogleLogin = async () => {
+const loadGoogleScript = () => {
+  return new Promise((resolve, reject) => {
+    if (window.google) {
+      resolve()
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.async = true
+    script.defer = true
+    script.onload = resolve
+    script.onerror = reject
+    document.head.appendChild(script)
+  })
+}
+
+const handleGoogleLoginDirect = async () => {
   try {
-    // Correctly call the signIn method on the global plugin instance
-    const googleUser = await proxy.$gAuth.signIn();
-    const token = googleUser.getAuthResponse().id_token;
+    await loadGoogleScript()
+    const client = google.accounts.oauth2.initTokenClient({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
 
-    const result = await loginWithGoogle({ googleToken: token });
+      scope: 'email profile openid',
 
-    if (result && result.data.loginWithGoogle) {
-      // On success, use Pinia store to save data and redirect
-      authStore.setAuthData(result.data.loginWithGoogle);
-      alert(`Successfully signed in as ${result.data.loginWithGoogle.user.fullname}!`);
-    }
+      callback: async (response) => {
+        if (response.error) {
+          console.error('Google auth error:', response.error)
+
+          return
+        }
+
+        try {
+          const result = await loginWithGoogle({ googleToken: response.access_token })
+
+          if (result && result.data.loginWithGoogle) {
+            authStore.setAuthData(result.data.loginWithGoogle)
+
+            alert(`Successfully signed in!`)
+          }
+        } catch (error) {
+          console.error('Backend login failed:', error)
+
+          alert('Authentication with backend failed.')
+        }
+      },
+    })
+
+    client.requestAccessToken()
   } catch (error) {
-    // This catches errors from the gAuth.signIn() process itself, like closing the popup
-    console.error('Google login process failed:', error);
-    if (error?.error !== 'popup_closed_by_user') {
-      alert('An error occurred during Google sign-in.');
-    }
+    console.error('Direct Google login failed:', error)
+
+    alert('Failed to load Google authentication.')
   }
-};
+}
 
 // --- GraphQL Error Handling ---
 
-onLoginError(error => {
-  console.error("GraphQL login error:", error.message);
-  alert(`Login failed: ${error.message}`);
-});
+onLoginError((error) => {
+  console.error('GraphQL login error:', error.message)
+  alert(`Login failed: ${error.message}`)
+})
 
-onGoogleError(error => {
-  console.error("GraphQL Google login error:", error.message);
-  alert(`Google login failed: ${error.message}`);
-});
+onGoogleError((error) => {
+  console.error('GraphQL Google login error:', error.message)
+  alert(`Google login failed: ${error.message}`)
+})
 </script>
 
 <style scoped>
