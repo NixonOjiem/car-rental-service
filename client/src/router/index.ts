@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import ForgotPasswordView from '@/views/ForgotPasswordView.vue';
 import MarketplaceView from '@/views/MarketplaceView.vue';
+import RentCarView from '@/views/RentCarView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/marketplace',
       name: 'marketplace',
       component: MarketplaceView,
+    },
+    {
+      path: '/rent',
+      name: 'RentCarView',
+      component: RentCarView,
     },
   ],
 })
