@@ -77,7 +77,7 @@
         </div>
 
         <div>
-          <button @click="handleGoogleLoginDirect" :disabled="googleLoading"
+          <!-- <button @click="handleGoogleLoginDirect" :disabled="googleLoading"
             class="w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition disabled:opacity-50">
             <svg class="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
               <path
@@ -95,7 +95,9 @@
               <path d="M1 1h22v22H1z" fill="none"></path>
             </svg>
             {{ googleLoading ? 'Processing...' : 'Sign in with Google' }}
-          </button>
+          </button> -->
+          <div id="google-btn" class="flex justify-center">Google login</div>
+
         </div>
 
         <div class="mt-8 text-center">
@@ -116,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { useAuthStore } from '@/stores/auth'
@@ -126,10 +128,8 @@ const email = ref('')
 const password = ref('')
 const authStore = useAuthStore()
 
-// This is how you access plugins like `$gAuth` in the Vue 3 Composition API
-const { proxy } = getCurrentInstance()
-
 // --- GraphQL Mutations ---
+
 // 1. Manual Login Mutation
 const {
   mutate: loginUser,
@@ -138,24 +138,6 @@ const {
 } = useMutation(gql`
   mutation LoginUser($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {
-      token
-      user {
-        id
-        fullname
-        email
-      }
-    }
-  }
-`)
-
-// 2. Google Login/Signup Mutation
-const {
-  mutate: loginWithGoogle,
-  loading: googleLoading,
-  onError: onGoogleError,
-} = useMutation(gql`
-  mutation LoginWithGoogle($googleToken: String!) {
-    loginWithGoogle(googleToken: $googleToken) {
       token
       user {
         id
@@ -187,13 +169,54 @@ const handleLogin = async () => {
   }
 }
 
-const loadGoogleScript = () => {
-  return new Promise((resolve, reject) => {
-    if (window.google) {
-      resolve()
-      return
+// --- Google Login Mutation ---
+const {
+  mutate: loginWithGoogle,
+  loading: googleLoading,
+  onError: onGoogleError,
+} = useMutation(gql`
+  mutation LoginWithGoogle($googleToken: String!) {
+    loginWithGoogle(googleToken: $googleToken) {
+      token
+      user {
+        id
+        fullname
+        email
+      }
     }
+  }
+`)
 
+// --- Google Sign-In Logic (New Approach) ---
+
+// This function will be called by the Google script once it authenticates the user
+const handleGoogleCredentialResponse = async (response) => {
+  console.log('Received Google Credential:', response)
+  // The token is now in `response.credential` (it's a JWT ID token, not an access token)
+  if (!response.credential) {
+    console.error('Google credential response did not contain a credential.')
+    alert('Google sign-in failed.')
+    return
+  }
+
+  try {
+    const result = await loginWithGoogle({ googleToken: response.credential })
+
+    if (result && result.data.loginWithGoogle) {
+      authStore.setAuthData(result.data.loginWithGoogle)
+      alert(`Successfully signed in with Google!`)
+    }
+  } catch (error) {
+    console.error('Backend login with Google failed:', error)
+    // The onGoogleError hook will also handle this
+  }
+}
+
+const loadGoogleScript = () => {
+  if (window.google) {
+    return Promise.resolve()
+  }
+  return new Promise((resolve, reject) => {
     const script = document.createElement('script')
     script.src = 'https://accounts.google.com/gsi/client'
     script.async = true
@@ -204,47 +227,37 @@ const loadGoogleScript = () => {
   })
 }
 
-const handleGoogleLoginDirect = async () => {
+// Use the onMounted lifecycle hook to initialize and render the button
+onMounted(async () => {
   try {
     await loadGoogleScript()
-    const client = google.accounts.oauth2.initTokenClient({
+
+    // 1. Initialize the Google Identity Services client
+    window.google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredentialResponse, // The function to call on success
+    });
 
-      scope: 'email profile openid',
+    // 2. Render the "Sign In With Google" button
+    window.google.accounts.id.renderButton(
+      document.getElementById('google-btn'), // Target the div we created
+      { theme: 'outline', size: 'large', width: '350' } // Customize the button
+    );
 
-      callback: async (response) => {
-        if (response.error) {
-          console.error('Google auth error:', response.error)
-
-          return
-        }
-
-        try {
-          const result = await loginWithGoogle({ googleToken: response.access_token })
-
-          if (result && result.data.loginWithGoogle) {
-            authStore.setAuthData(result.data.loginWithGoogle)
-
-            alert(`Successfully signed in!`)
-          }
-        } catch (error) {
-          console.error('Backend login failed:', error)
-
-          alert('Authentication with backend failed.')
-        }
-      },
-    })
-
-    client.requestAccessToken()
   } catch (error) {
-    console.error('Direct Google login failed:', error)
-
-    alert('Failed to load Google authentication.')
+    console.error('Failed to load or initialize Google Sign-In:', error)
+    alert('Could not load Google Sign-In. Please try again later.')
   }
-}
+})
+
+// Cleanup to avoid issues with Hot Module Replacement (HMR) in dev
+onUnmounted(() => {
+  // Optional: You can add cleanup logic here if needed
+  window.google?.accounts.id.cancel();
+})
+
 
 // --- GraphQL Error Handling ---
-
 onLoginError((error) => {
   console.error('GraphQL login error:', error.message)
   alert(`Login failed: ${error.message}`)
