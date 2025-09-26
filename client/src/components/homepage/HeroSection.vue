@@ -6,7 +6,7 @@
         Rent the car of your dreams. Unbeatable prices, unlimited miles, and flexible pick-up options. Your next
         adventure starts here.
       </p>
-      <button class="cta-button">Browse Our Fleet</button>
+      <button class="cta-button" @click="goToRent">Browse Our Fleet</button>
     </div>
 
     <div class="hero-image-container">
@@ -31,8 +31,14 @@
 </template>
 
 <script lang="ts">
+
 export default {
   name: 'HeroSection',
+  methods: {
+    goToRent() {
+      this.$router.push('/rent')
+    }
+  }
 }
 </script>
 
