@@ -72,6 +72,7 @@ const authStore = useAuthStore()
 
 // 2. Get the router instance for navigation.
 const router = useRouter()
+console.log({ localStorage })
 
 // 3. Define methods directly as constants.
 const goHome = () => {
