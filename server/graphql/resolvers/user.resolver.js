@@ -11,9 +11,13 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Helper function to generate a JWT
 const generateToken = (user) => {
-  return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
+  return jwt.sign(
+    { id: user.id, email: user.email, name: user.fullname },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
 const userResolvers = {
@@ -58,7 +62,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(savedUser);
-      return { token, user: savedUser };
+      //return { token, user: savedUser };
+      return { token };
     },
 
     // --- Manual Login ---
@@ -80,7 +85,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(user);
-      return { token, user };
+      //return { token, user };
+      return { token };
     },
 
     // --- Google Login/Signup ---
@@ -129,7 +135,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(user);
-      return { token, user };
+      //return { token, user };
+      return { token };
     },
   },
 };
