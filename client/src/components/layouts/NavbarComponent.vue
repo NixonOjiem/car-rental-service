@@ -63,23 +63,26 @@
   </header>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { useAuthStore } from '../../stores/auth'
+import { useRouter } from 'vue-router'
 
-export default {
-  name: 'NavbarComponent',
-  setup() {
-    const authStore = useAuthStore()
-    return {
-      authStore
-    }
-  },
-  methods: {
-    goHome() {
-      this.$router.push('/')
-    }
-  }
+// 1. Instantiate the store. It's automatically reactive and available to the template.
+const authStore = useAuthStore()
+
+// 2. Get the router instance for navigation.
+const router = useRouter()
+
+// 3. Define methods directly as constants.
+const goHome = () => {
+  router.push('/')
 }
+
+// Optional: You can still log to debug, but it's no longer in a place that blocks rendering.
+// console.log({
+//   user: authStore.user,      // In <script setup>, you don't need .value for the object itself
+//   token: authStore.token
+// });
 </script>
 
 <style scoped>

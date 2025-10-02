@@ -4,7 +4,12 @@ import router from '@/router'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('authToken') || null)
-  const user = ref(JSON.parse(localStorage.getItem('user')) || null)
+
+  // --- FIX IS HERE ---
+  // 1. Get the raw data from localStorage
+  const userDataFromStorage = localStorage.getItem('user')
+  // 2. Only parse it if it's not null, otherwise default to null
+  const user = ref(userDataFromStorage ? JSON.parse(userDataFromStorage) : null)
 
   const isAuthenticated = computed(() => !!token.value)
 
