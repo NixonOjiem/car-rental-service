@@ -71,6 +71,7 @@
 import NavbarComponent from '../components/layouts/NavbarComponent.vue';
 import FooterComponent from '../components/layouts/FooterComponent.vue';
 import { carCategories } from '../components/data/carCategories';
+
 export default {
   components: { NavbarComponent, FooterComponent },
   data() {
