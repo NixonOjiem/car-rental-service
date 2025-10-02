@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import router from '@/router'
-import Cookies from 'js-cookie' // 👈 Import the library
+import Cookies from 'js-cookie'
+import { jwtDecode } from 'jwt-decode' // ✨ 1. Import the decoder
 
 export const useAuthStore = defineStore('auth', () => {
   // --- State ---
-  // Read initial state from cookies
   const token = ref(Cookies.get('authToken') || null)
   const userCookie = Cookies.get('user')
   const user = ref(userCookie ? JSON.parse(userCookie) : null)
@@ -16,33 +16,40 @@ export const useAuthStore = defineStore('auth', () => {
   // --- Actions ---
 
   /**
-   * Sets authentication data in the store and cookies.
-   * @param {object} authData - The authentication data containing token and user info.
+   * 🔧 2. Modified Action: Decodes JWT, sets auth data in store and cookies.
+   * Now it only needs the token string.
+   * @param {string} authToken - The JWT received from the API.
    */
-  function setAuthData(authData) {
+  function setAuthData(authToken) {
+    // Decode the token to get the payload
+    const decodedPayload = jwtDecode(authToken)
+
+    // ✨ 3. Create the user object from the decoded token payload
+    const userObject = {
+      id: decodedPayload.id,
+      email: decodedPayload.email,
+      name: decodedPayload.name, // The key in your JWT payload is 'name'
+    }
+
     // Update the state
-    token.value = authData.token
-    user.value = authData.user
+    token.value = authToken
+    user.value = userObject
 
     // Set cookies to persist the session
-    // Options: expires in 7 days, secure flag for HTTPS, SameSite for CSRF protection
     const cookieOptions = { expires: 7, secure: true, sameSite: 'Lax' }
+    Cookies.set('authToken', authToken, cookieOptions)
+    Cookies.set('user', JSON.stringify(userObject), cookieOptions) // Store the user object too
 
-    Cookies.set('authToken', authData.token, cookieOptions)
-    Cookies.set('user', JSON.stringify(authData.user), cookieOptions)
-
-    router.push('/') // Redirect to home on successful login/register
+    router.push('/') // Redirect to home
   }
 
   /**
    * Clears authentication data from the store and cookies.
    */
   function logout() {
-    // Clear the state
     token.value = null
     user.value = null
 
-    // Remove the cookies
     Cookies.remove('authToken')
     Cookies.remove('user')
 

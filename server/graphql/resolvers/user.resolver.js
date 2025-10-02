@@ -15,7 +15,7 @@ const generateToken = (user) => {
     { id: user.id, email: user.email, name: user.fullname },
     process.env.JWT_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "7d",
     }
   );
 };
@@ -62,7 +62,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(savedUser);
-      return { token, user: savedUser };
+      //return { token, user: savedUser };
+      return { token };
     },
 
     // --- Manual Login ---
@@ -84,7 +85,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(user);
-      return { token, user };
+      //return { token, user };
+      return { token };
     },
 
     // --- Google Login/Signup ---
@@ -133,7 +135,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(user);
-      return { token, user };
+      //return { token, user };
+      return { token };
     },
   },
 };
