@@ -159,11 +159,11 @@ const {
   mutation LoginWithGoogle($googleToken: String!) {
     loginWithGoogle(googleToken: $googleToken) {
       token
-      user {
-        id
-        fullname
-        email
-      }
+      # user {
+      #   id
+      #   fullname
+      #   email
+      # }
     }
   }
 `)
@@ -184,7 +184,7 @@ const handleGoogleCredentialResponse = async (response) => {
     const result = await loginWithGoogle({ googleToken: response.credential })
 
     if (result && result.data.loginWithGoogle) {
-      authStore.setAuthData(result.data.loginWithGoogle)
+      authStore.setAuthData(result.data.loginWithGoogle.token)
       alert(`Successfully signed in with Google!`)
     }
   } catch (error) {

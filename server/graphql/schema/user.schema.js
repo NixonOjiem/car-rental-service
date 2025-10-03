@@ -13,7 +13,7 @@ const userTypeDefs = gql`
   # This payload is returned on successful authentication
   type AuthPayload {
     token: String!
-    user: User!
+    #   #user: User!
   }
 
   type Query {
