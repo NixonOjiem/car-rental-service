@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import router from '@/router'
 import Cookies from 'js-cookie'
-import { jwtDecode } from 'jwt-decode' // ✨ 1. Import the decoder
+import { jwtDecode } from 'jwt-decode'
 
 export const useAuthStore = defineStore('auth', () => {
   // --- State ---

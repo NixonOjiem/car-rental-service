@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gray-100 flex text-gray-800">
     <div class="relative hidden lg:flex lg:w-1/2 items-center justify-center bg-gray-800">
       <div class="absolute inset-0 bg-cover bg-center" style="
-          background-image: url('https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?q=80&w=2500&auto=format&fit=crop');
+          background-image: url('/images/LoginPic.avif');
         "></div>
       <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60"></div>
 
@@ -120,11 +120,11 @@ const {
   mutation LoginUser($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {
       token
-      user {
-        id
-        fullname
-        email
-      }
+      # user {
+      #   id
+      #   fullname
+      #   email
+      # }
     }
   }
 `)
@@ -141,7 +141,7 @@ const handleLogin = async () => {
 
     if (result && result.data.loginUser) {
       // On success, use Pinia store to save data and redirect
-      authStore.setAuthData(result.data.loginUser)
+      authStore.setAuthData(result.data.loginUser.token)
       alert(`Welcome back, ${result.data.loginUser.user.fullname}!`)
     }
   } catch (e) {
@@ -159,11 +159,11 @@ const {
   mutation LoginWithGoogle($googleToken: String!) {
     loginWithGoogle(googleToken: $googleToken) {
       token
-      user {
-        id
-        fullname
-        email
-      }
+      # user {
+      #   id
+      #   fullname
+      #   email
+      # }
     }
   }
 `)
@@ -184,7 +184,7 @@ const handleGoogleCredentialResponse = async (response) => {
     const result = await loginWithGoogle({ googleToken: response.credential })
 
     if (result && result.data.loginWithGoogle) {
-      authStore.setAuthData(result.data.loginWithGoogle)
+      authStore.setAuthData(result.data.loginWithGoogle.token)
       alert(`Successfully signed in with Google!`)
     }
   } catch (error) {
