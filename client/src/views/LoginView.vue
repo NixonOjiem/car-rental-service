@@ -120,11 +120,11 @@ const {
   mutation LoginUser($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {
       token
-      user {
-        id
-        fullname
-        email
-      }
+      # user {
+      #   id
+      #   fullname
+      #   email
+      # }
     }
   }
 `)
@@ -141,7 +141,7 @@ const handleLogin = async () => {
 
     if (result && result.data.loginUser) {
       // On success, use Pinia store to save data and redirect
-      authStore.setAuthData(result.data.loginUser)
+      authStore.setAuthData(result.data.loginUser.token)
       alert(`Welcome back, ${result.data.loginUser.user.fullname}!`)
     }
   } catch (e) {

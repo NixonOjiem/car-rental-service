@@ -181,11 +181,11 @@ const { mutate: loginWithGoogle, loading: googleLoading, onError: onGoogleError 
   mutation LoginWithGoogle($googleToken: String!) {
     loginWithGoogle(googleToken: $googleToken) {
       token
-      user {
-        id
-        fullname
-        email
-      }
+      # user {
+      #   id
+      #   fullname
+      #   email
+      # }
     }
   }
 `);
@@ -210,7 +210,7 @@ const handleRegister = async () => {
     });
 
     if (result && result.data.registerUser) {
-      authStore.setAuthData(result.data.registerUser);
+      authStore.setAuthData(result.data.registerUser.token);
       alert(`Welcome, ${result.data.registerUser.user.fullname}!`);
     }
   } catch (e) {
@@ -228,7 +228,7 @@ const handleGoogleLogin = async () => {
     const result = await loginWithGoogle({ googleToken: token });
 
     if (result && result.data.loginWithGoogle) {
-      authStore.setAuthData(result.data.loginWithGoogle);
+      authStore.setAuthData(result.data.loginWithGoogle.token);
       alert(`Welcome, ${result.data.loginWithGoogle.user.fullname}!`);
     }
   } catch (error) {
