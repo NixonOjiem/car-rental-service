@@ -1,8 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex text-gray-800">
     <div class="relative hidden lg:flex lg:w-1/2 items-center justify-center bg-gray-800">
-      <div class="absolute inset-0 bg-cover bg-center"
-        style="background-image: url('https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=2600&auto=format&fit=crop');">
+      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/Signup.avif');">
       </div>
       <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60"></div>
 
