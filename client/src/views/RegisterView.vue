@@ -1,8 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex text-gray-800">
     <div class="relative hidden lg:flex lg:w-1/2 items-center justify-center bg-gray-800">
-      <div class="absolute inset-0 bg-cover bg-center"
-        style="background-image: url('https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=2600&auto=format&fit=crop');">
+      <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/images/Signup.avif');">
       </div>
       <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-60"></div>
 
@@ -181,11 +180,11 @@ const { mutate: loginWithGoogle, loading: googleLoading, onError: onGoogleError 
   mutation LoginWithGoogle($googleToken: String!) {
     loginWithGoogle(googleToken: $googleToken) {
       token
-      user {
-        id
-        fullname
-        email
-      }
+      # user {
+      #   id
+      #   fullname
+      #   email
+      # }
     }
   }
 `);
@@ -210,7 +209,7 @@ const handleRegister = async () => {
     });
 
     if (result && result.data.registerUser) {
-      authStore.setAuthData(result.data.registerUser);
+      authStore.setAuthData(result.data.registerUser.token);
       alert(`Welcome, ${result.data.registerUser.user.fullname}!`);
     }
   } catch (e) {
@@ -228,7 +227,7 @@ const handleGoogleLogin = async () => {
     const result = await loginWithGoogle({ googleToken: token });
 
     if (result && result.data.loginWithGoogle) {
-      authStore.setAuthData(result.data.loginWithGoogle);
+      authStore.setAuthData(result.data.loginWithGoogle.token);
       alert(`Welcome, ${result.data.loginWithGoogle.user.fullname}!`);
     }
   } catch (error) {

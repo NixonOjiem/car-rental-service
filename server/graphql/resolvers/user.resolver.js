@@ -11,9 +11,13 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Helper function to generate a JWT
 const generateToken = (user) => {
-  return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
-  });
+  return jwt.sign(
+    { id: user.id, email: user.email, name: user.fullname },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
 const userResolvers = {
@@ -58,7 +62,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(savedUser);
-      return { token, user: savedUser };
+      //return { token, user: savedUser };
+      return { token };
     },
 
     // --- Manual Login ---
@@ -80,7 +85,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(user);
-      return { token, user };
+      //return { token, user };
+      return { token };
     },
 
     // --- Google Login/Signup ---
@@ -102,17 +108,20 @@ const userResolvers = {
 
       const { email, name, sub: googleId } = googlePayload;
 
-      // 2. Find or create the user ("upsert" logic)
+      // 2. Find or create the user
       let user = await User.findOne({ email });
 
       if (user) {
-        // If user exists but signed up manually, throw error
+        // --- THIS IS THE UPDATED LOGIC ---
+        // User exists. If they signed up manually, link their Google account.
         if (user.provider === "manual") {
-          throw new UserInputError(
-            "This email is registered with a password. Please log in manually."
-          );
+          user.googleId = googleId;
+          user.provider = "google"; // Update their provider
+          // You might also want to update their name if it's different
+          // user.fullname = name;
+          await user.save(); // Save the changes
         }
-        // If they are a google user, we just log them in
+        // If they were already a google user, we just proceed.
       } else {
         // If user does not exist, create a new one
         const newUser = new User({
@@ -126,7 +135,8 @@ const userResolvers = {
 
       // 3. Generate a token and return the AuthPayload
       const token = generateToken(user);
-      return { token, user };
+      //return { token, user };
+      return { token };
     },
   },
 };

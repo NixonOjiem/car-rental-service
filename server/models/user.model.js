@@ -1,5 +1,3 @@
-// models/User.js
-
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
@@ -29,6 +27,8 @@ const userSchema = new mongoose.Schema(
     },
     googleId: {
       type: String,
+      unique: true,
+      sparse: true,
       required: function () {
         return !this.password;
       },
