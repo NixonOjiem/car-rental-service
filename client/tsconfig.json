@@ -1,20 +1,29 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.vitest.json"
-    }
-  ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+ "files": [],
+ "references": [
+  {
+   "path": "./tsconfig.node.json"
+  },
+  {
+   "path": "./tsconfig.app.json"
+  },
+  {
+   "path": "./tsconfig.vitest.json"
   }
+ ],
+ "compilerOptions": {
+  "baseUrl": ".",
+  "composite": true,
+  "noEmit": false,
+  "paths": {
+   "@/*": ["src/*"]
+  }
+ },
+ "include": [
+  "src/**/*.ts",
+  "src/**/*.d.ts",
+  "src/**/*.tsx",
+  "src/**/*.vue",
+  "src/declarations.d.ts"
+ ]
 }
