@@ -166,11 +166,11 @@ const { mutate: registerUser, loading: registerLoading, onError: onRegisterError
   mutation RegisterUser($fullname: String!, $email: String!, $password: String!) {
     registerUser(fullname: $fullname, email: $email, password: $password) {
       token
-      user {
-        id
-        fullname
-        email
-      }
+      # user {
+      #   id
+      #   fullname
+      #   email
+      # }
     }
   }
 `);

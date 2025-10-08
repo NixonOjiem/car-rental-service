@@ -14,7 +14,6 @@ import { DefaultApolloClient } from '@vue/apollo-composable'
 // --- Apollo Client Configuration ---
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI,
-  //uri: 'http://localhost:3000/gql', // Your GraphQL endpoint
 });
 
 const authLink = setContext((_, { headers }) => {
