@@ -8,7 +8,7 @@ export const carCategories = [
         name: 'Toyota Camry',
         type: 'Sedan',
         image:
-          'https://images.unsplash.com/photo-1617469724584-55d512f483b8?q=80&w=2070&auto=format&fit=crop',
+          '/images/2018-toyota-camry-toyota.png',
         price: 75,
         specs: { seats: '5', transmission: 'Auto', fuel: 'Gasoline' },
       },
@@ -17,7 +17,7 @@ export const carCategories = [
         name: 'Honda Civic',
         type: 'Sedan',
         image:
-          'https://images.unsplash.com/photo-1553524325-a13a4a03c038?q=80&w=1949&auto=format&fit=crop',
+          '/images/honda-civic-.png',
         price: 70,
         specs: { seats: '5', transmission: 'Auto', fuel: 'Gasoline' },
       },
@@ -26,7 +26,7 @@ export const carCategories = [
         name: 'Ford Explorer',
         type: 'SUV',
         image:
-          'https://images.unsplash.com/photo-1617445214418-f173c36c4b2c?q=80&w=2070&auto=format&fit=crop',
+          '/images/2017-ford-explorer.png',
         price: 90,
         specs: { seats: '7', transmission: 'Auto', fuel: 'Gasoline' },
       },
@@ -35,7 +35,7 @@ export const carCategories = [
         name: 'Hyundai Tucson',
         type: 'SUV',
         image:
-          'https://images.unsplash.com/photo-1662919426868-7137f2619e04?q=80&w=1964&auto=format&fit=crop',
+          '/images/hyundai-ix35-car-2018.png',
         price: 85,
         specs: { seats: '5', transmission: 'Auto', fuel: 'Hybrid' },
       },
@@ -50,7 +50,7 @@ export const carCategories = [
         name: 'Jeep Wrangler',
         type: '4x4',
         image:
-          'https://images.unsplash.com/photo-1566437979482-89b5a8a1c92a?q=80&w=2070&auto=format&fit=crop',
+          '/images/jeep-wrangler-car-jeep.png',
         price: 120,
         specs: { seats: '4', transmission: 'Manual', fuel: 'Diesel' },
       },
@@ -59,7 +59,7 @@ export const carCategories = [
         name: 'Ford Bronco',
         type: '4x4',
         image:
-          'https://images.unsplash.com/photo-1627443493933-7a09c3799d50?q=80&w=2070&auto=format&fit=crop',
+          '/images/ford-ranger-car-ford-bronco.png',
         price: 135,
         specs: { seats: '5', transmission: 'Auto', fuel: 'Gasoline' },
       },
@@ -68,7 +68,7 @@ export const carCategories = [
         name: 'Land Rover Defender',
         type: '4x4',
         image:
-          'https://images.unsplash.com/photo-1605628540321-c584e03c407c?q=80&w=1974&auto=format&fit=crop',
+          '/images/land-rover-defender.png',
         price: 150,
         specs: { seats: '5', transmission: 'Auto', fuel: 'Diesel' },
       },
@@ -77,7 +77,7 @@ export const carCategories = [
         name: 'Toyota 4Runner',
         type: '4x4',
         image:
-          'https://images.unsplash.com/photo-1625941913160-26b274aad45f?q=80&w=2070&auto=format&fit=crop',
+          '/images/2018-toyota-4runner-trd-off-road.png',
         price: 110,
         specs: { seats: '5', transmission: 'Auto', fuel: 'Gasoline' },
       },
@@ -92,7 +92,7 @@ export const carCategories = [
         name: 'Porsche 911',
         type: 'Coupe',
         image:
-          'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=1964&auto=format&fit=crop',
+          '/images/porsche-911-gt3-2017.png',
         price: 450,
         specs: { seats: '2', transmission: 'Auto', fuel: 'Gasoline' },
       },
@@ -101,7 +101,7 @@ export const carCategories = [
         name: 'BMW M4',
         type: 'Coupe',
         image:
-          'https://images.unsplash.com/photo-1617436236592-1b33b2554744?q=80&w=2070&auto=format&fit=crop',
+          '/images/personal-luxury-car-2017-bmw-m4.png',
         price: 380,
         specs: { seats: '4', transmission: 'Auto', fuel: 'Gasoline' },
       },
@@ -110,7 +110,16 @@ export const carCategories = [
         name: 'Chevrolet Corvette',
         type: 'Coupe',
         image:
-          'https://images.unsplash.com/photo-1613102462024-814a682c3c6f?q=80&w=2070&auto=format&fit=crop',
+          '/images/2016-chevrolet-corvette-2015.png',
+        price: 420,
+        specs: { seats: '2', transmission: 'Auto', fuel: 'Gasoline' },
+      },
+      {
+        id: 12,
+        name: 'A4 Audi',
+        type: 'sedan',
+        image:
+          '/images/2018-audi-a4-2011.png',
         price: 420,
         specs: { seats: '2', transmission: 'Auto', fuel: 'Gasoline' },
       },
@@ -121,29 +130,38 @@ export const carCategories = [
     description: 'Travel in ultimate comfort and style with our finest luxury vehicles.',
     cars: [
       {
-        id: 12,
+        id: 13,
         name: 'Rolls Royce Ghost',
         type: 'Luxury',
         image:
-          'https://images.unsplash.com/photo-1616422285812-4a0b2a5b2b2c?q=80&w=1964&auto=format&fit=crop',
+          '/images/rolls-royce-ghost-car-rolls-royce-phantom.png',
         price: 800,
         specs: { seats: '5', transmission: 'Auto', fuel: 'Gasoline' },
       },
       {
-        id: 13,
+        id: 14,
         name: 'Mercedes-Benz S-Class',
         type: 'Luxury',
         image:
-          'https://images.unsplash.com/photo-1620436993590-5cd5a4a5ac4e?q=80&w=2070&auto=format&fit=crop',
+          '/images/mercedes-benz-s-class-car-maybach.png',
         price: 650,
         specs: { seats: '5', transmission: 'Auto', fuel: 'Hybrid' },
       },
       {
-        id: 14,
+        id: 15,
         name: 'Bentley Continental GT',
         type: 'Luxury',
         image:
-          'https://images.unsplash.com/photo-1594071352434-d62f043b22b6?q=80&w=2070&auto=format&fit=crop',
+          '/images/bentley-continental-gt.png',
+        price: 750,
+        specs: { seats: '4', transmission: 'Auto', fuel: 'Gasoline' },
+      },
+      {
+        id: 16,
+        name: 'A8 Audi',
+        type: 'Luxury',
+        image:
+          '/images/audi-a8-2017.png',
         price: 750,
         specs: { seats: '4', transmission: 'Auto', fuel: 'Gasoline' },
       },

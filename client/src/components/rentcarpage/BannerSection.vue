@@ -1,5 +1,5 @@
 <template>
-  <section class="relative h-[50vh] min-h-[300px] flex items-center justify-center text-center text-white px-4">
+  <section class="relative h-[40vh] min-h-[300px] flex items-center justify-center text-center text-white px-4">
 
     <img src="/images/1695427729798.jpg" alt="Sports Car Banner"
       class="absolute inset-0 w-full h-full object-cover z-[0]">
