@@ -3,14 +3,7 @@
     <NavbarComponent />
 
     <main class="bg-gray-50 text-gray-800">
-      <section class="relative h-[50vh] min-h-[300px] flex items-center justify-center text-center text-white px-4">
-        <div class="absolute inset-0 bg-black opacity-50 z-0"></div>
-        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop" alt="Sports Car Banner" class="absolute inset-0 w-full h-full object-cover z-[-1]">
-        <div class="relative z-10">
-          <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Find Your Perfect Ride</h1>
-          <p class="text-lg md:text-xl max-w-2xl mx-auto">Explore our premium collection of vehicles for any adventure.</p>
-        </div>
-      </section>
+      <BannerSection />
 
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
 
@@ -70,10 +63,11 @@
 <script lang="ts">
 import NavbarComponent from '../components/layouts/NavbarComponent.vue';
 import FooterComponent from '../components/layouts/FooterComponent.vue';
+import BannerSection from '../components/rentcarpage/BannerSection.vue';
 import { carCategories } from '../components/data/carCategories';
 
 export default {
-  components: { NavbarComponent, FooterComponent },
+  components: { NavbarComponent, FooterComponent, BannerSection },
   data() {
     return {
       carCategories,

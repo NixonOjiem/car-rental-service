@@ -7,7 +7,8 @@
         <div>
           <h2 class="text-white text-xl font-bold mb-4">CarGo Rentals</h2>
           <p class="text-sm">
-            Your journey begins with the perfect ride. Explore luxury, power, and style from our fleet of premium vehicles.
+            Your journey begins with the perfect ride. Explore luxury, power, and style from our fleet of premium
+            vehicles.
           </p>
         </div>
 
@@ -37,8 +38,10 @@
         <div>
           <h3 class="text-white font-semibold text-sm uppercase mb-4">Stay Updated</h3>
           <form @submit.prevent class="flex flex-col space-y-3">
-            <input type="email" placeholder="Enter your email" class="px-4 py-2 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-sky-500" />
-            <button class="px-4 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-500 transition font-semibold text-sm">
+            <input type="email" placeholder="Enter your email"
+              class="px-4 py-2 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-sky-500" />
+            <button
+              class="px-4 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-500 transition font-semibold text-sm">
               Subscribe
             </button>
           </form>
@@ -71,8 +74,5 @@
   </footer>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'FooterComponent',
-}
+<script setup lang="ts">
 </script>
