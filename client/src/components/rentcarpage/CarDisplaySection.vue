@@ -1,9 +1,7 @@
 <template>
   <div>
     <main class="bg-gray-50 text-gray-800">
-
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-
         <div v-if="loading" class="text-center text-gray-500 py-10">
           <p class="text-xl">Loading inventory, please wait...</p>
         </div>
@@ -39,10 +37,10 @@
                       ${{ car.price ? car.price.toLocaleString() : 'N/A' }}
                       <span class="text-sm font-normal text-gray-500">/day</span>
                     </p>
-                    <button
+                    <router-link :to="{ name: 'BookView', params: { id: car._id } }"
                       class="bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#0096B2] transition-colors duration-300">
                       Rent Now
-                    </button>
+                    </router-link>
                   </div>
                 </div>
               </div>

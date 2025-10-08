@@ -40,7 +40,7 @@ const router = createRouter({
       component: RentCarView,
     },
     {
-      path: '/book',
+      path: '/book/:id',
       name: 'BookView',
       component: BookView,
     },
