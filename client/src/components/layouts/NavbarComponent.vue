@@ -19,7 +19,7 @@
             <router-link to="/rent">Rent</router-link>
           </li>
           <li class="hover:text-[#00b4d8] transition-colors">
-            <router-link to="#">Consulting</router-link>
+            <router-link to="/consult">Consulting</router-link>
           </li>
           <li class="hover:text-[#00b4d8] transition-colors">
             <router-link to="#">About Us</router-link>
