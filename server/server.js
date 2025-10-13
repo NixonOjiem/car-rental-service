@@ -28,11 +28,37 @@ const {
   closeDatabaseConnection,
 } = require("./config/database");
 
-app.use(cors());
+// =================================================================
+// START: CORS CONFIGURATION
+// =================================================================
+const allowedOrigins = [
+  "https://carrentalwithnode.netlify.app",
+  "http://lovehomemart.com",
+  "http://localhost:5173", // Example: for a local Vite React app
+  "http://localhost:3000", // Example: for another local server
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+// =================================================================
+// END: CORS CONFIGURATION
+// =================================================================
+
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp"); // Often needed alongside COOP
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
 
