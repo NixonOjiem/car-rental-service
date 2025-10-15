@@ -24,6 +24,7 @@
         </div>
       </div>
 
+      <!-- This section will contain details about renting the car-->
       <!-- Car Details -->
       <div v-if="result && result.car" class="max-w-6xl mx-auto mt-[100px] ">
         <!-- Breadcrumb -->
