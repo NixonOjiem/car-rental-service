@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // Reference the User model
+      required: true, // A booking must belong to a user
+    },
     // Link the booking to the Car model (assuming you have a Car model)
     car: {
       type: mongoose.Schema.Types.ObjectId,
