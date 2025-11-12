@@ -84,7 +84,6 @@ const bookingResolvers = {
     pickupDate: (booking) => booking.pickupDate.toISOString(),
     returnDate: (booking) => booking.returnDate.toISOString(),
     bookedAt: (booking) => booking.bookedAt.toISOString(),
-
     // You can also add resolvers for other fields if needed, like fetching
     // the customer details using the customerID, or if you skipped step 4 above.
   },
