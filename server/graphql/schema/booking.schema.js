@@ -10,7 +10,7 @@ const bookingTypeDefs = gql`
     pickupDate: String!
     returnDate: String!
     pickupLocation: String!
-    customerID: String # Output customerID
+    user: User # Output customerID
     bookedAt: String!
     status: String! # Added the new Status field (Output)
   }

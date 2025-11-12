@@ -58,7 +58,7 @@ const bookingResolvers = {
         pickupDate: parsedPickupDate,
         returnDate: parsedReturnDate,
         pickupLocation: pickupLocation,
-        customerID: customerID,
+        user: customerID,
         // If status is provided in input, use it; otherwise, the model's 'Pending' default is used.
         status: status,
       });
