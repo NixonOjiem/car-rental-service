@@ -1,7 +1,7 @@
 <template>
   <div>
     <NavbarComponent />
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-gray-50 ">
       <main class="container mx-auto px-4 py-12 md:py-16">
 
         <div v-if="loading" class="text-center py-20 bg-white shadow-lg rounded-xl">
