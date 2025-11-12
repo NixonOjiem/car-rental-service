@@ -34,7 +34,7 @@
             <li class="before:content-['/'] before:mr-2"><a href="/cars"
                 class="hover:text-blue-600 transition-colors">Cars</a></li>
             <li class="before:content-['/'] before:mr-2"><span class="text-gray-900 font-medium">{{ result.car.name
-            }}</span></li>
+                }}</span></li>
           </ol>
         </nav>
 
@@ -183,10 +183,10 @@
                   <label class="block text-sm font-medium text-gray-700 mb-1">Pick-up Location</label>
                   <select
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    <option>New York City Center</option>
-                    <option>JFK Airport</option>
-                    <option>LaGuardia Airport</option>
-                    <option>Manhattan Downtown</option>
+                    <option>GPO Office Nairobi</option>
+                    <option>Jomo Kenyatta Airport</option>
+                    <option>Highridge Parklands</option>
+                    <option>Ngong Market Place</option>
                   </select>
                 </div>
               </div>

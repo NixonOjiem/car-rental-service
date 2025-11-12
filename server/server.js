@@ -36,6 +36,7 @@ const allowedOrigins = [
   "http://lovehomemart.com",
   "http://localhost:5173", // Example: for a local Vite React app
   "http://localhost:3000", // Example: for another local server
+  "http://localhost:5174",
 ];
 
 const corsOptions = {
