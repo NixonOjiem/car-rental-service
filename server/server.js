@@ -16,11 +16,19 @@ const { carTypeDefs } = require("./graphql/schema/car.schema");
 const { carResolvers } = require("./graphql/resolvers/car.resolver");
 const { categoryTypeDefs } = require("./graphql/schema/category.schema");
 const { categoryResolvers } = require("./graphql/resolvers/category.resolver");
-const typeDefs = mergeTypeDefs([userTypeDefs, carTypeDefs, categoryTypeDefs]);
+const { bookingTypeDefs } = require("./graphql/schema/booking.schema");
+const { bookingResolvers } = require("./graphql/resolvers/booking.resolver");
+const typeDefs = mergeTypeDefs([
+  userTypeDefs,
+  carTypeDefs,
+  categoryTypeDefs,
+  bookingTypeDefs,
+]);
 const resolvers = mergeResolvers([
   userResolvers,
   carResolvers,
   categoryResolvers,
+  bookingResolvers,
 ]);
 
 const {
@@ -36,6 +44,7 @@ const allowedOrigins = [
   "http://lovehomemart.com",
   "http://localhost:5173", // Example: for a local Vite React app
   "http://localhost:3000", // Example: for another local server
+  "http://localhost:5174",
 ];
 
 const corsOptions = {
