@@ -2,13 +2,13 @@
   <div class="min-h-screen bg-gray-50 ">
     <NavbarComponent />
     <main class="container mx-auto px-4 py-8 md:py-12">
-      <!-- Loading State -->
+      <!-- Loading State for Car Fetch -->
       <div v-if="loading" class="flex flex-col items-center justify-center py-20">
         <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <p class="text-xl text-gray-600">Loading car details...</p>
       </div>
 
-      <!-- Error State -->
+      <!-- Error State for Car Fetch -->
       <div v-if="error" class="max-w-2xl mx-auto bg-red-50 border-l-4 border-red-500 p-6 rounded-lg shadow-md"
         role="alert">
         <div class="flex items-start">
@@ -24,8 +24,7 @@
         </div>
       </div>
 
-      <!-- This section will contain details about renting the car-->
-      <!-- Car Details -->
+      <!-- Main Content -->
       <div v-if="result && result.car" class="max-w-6xl mx-auto mt-[100px] ">
         <!-- Breadcrumb -->
         <nav class="mb-6 text-sm text-gray-500">
@@ -64,7 +63,7 @@
             </div>
           </div>
 
-          <!-- Car Details Section -->
+          <!-- Car Details & Booking Section -->
           <div class="space-y-6">
             <div>
               <div class="flex items-center justify-between mb-2">
@@ -146,18 +145,32 @@
             </div>
 
             <!-- Booking Section -->
-            <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+            <form @submit.prevent="bookCar" class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
               <h2 class="text-2xl font-bold text-gray-900 mb-6">Book Your Ride</h2>
+
+              <!-- Booking Status Messages -->
+              <div v-if="bookingSuccess"
+                class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded" role="alert">
+                <p class="font-bold">Booking Confirmed!</p>
+                <p>Your reservation for {{ result.car.name }} has been successfully placed.</p>
+              </div>
+
+              <div v-if="bookingError" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded"
+                role="alert">
+                <p class="font-bold">Booking Failed</p>
+                <p>{{ bookingError.message || 'An unexpected error occurred during booking.' }}</p>
+              </div>
 
               <div class="space-y-4 mb-6">
                 <div class="grid grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Pick-up Date</label>
+                    <label for="pickupDate" class="block text-sm font-medium text-gray-700 mb-1">Pick-up Date</label>
                     <div class="relative">
-                      <input type="date"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                      <svg class="w-5 h-5 text-gray-400 absolute right-3 top-3" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <input type="date" id="pickupDate" :min="TODAY" v-model="bookingForm.pickupDate"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required>
+                      <svg class="w-5 h-5 text-gray-400 absolute right-3 top-3 pointer-events-none" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                         </path>
@@ -165,12 +178,14 @@
                     </div>
                   </div>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Return Date</label>
+                    <label for="returnDate" class="block text-sm font-medium text-gray-700 mb-1">Return Date</label>
                     <div class="relative">
-                      <input type="date"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                      <svg class="w-5 h-5 text-gray-400 absolute right-3 top-3" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <input type="date" id="returnDate" :min="bookingForm.pickupDate || TODAY"
+                        v-model="bookingForm.returnDate"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required>
+                      <svg class="w-5 h-5 text-gray-400 absolute right-3 top-3 pointer-events-none" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
                         </path>
@@ -180,9 +195,11 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Pick-up Location</label>
-                  <select
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                  <label for="pickupLocation" class="block text-sm font-medium text-gray-700 mb-1">Pick-up
+                    Location</label>
+                  <select id="pickupLocation" v-model="bookingForm.pickupLocation"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required>
                     <option>GPO Office Nairobi</option>
                     <option>Jomo Kenyatta Airport</option>
                     <option>Highridge Parklands</option>
@@ -191,17 +208,19 @@
                 </div>
               </div>
 
-              <button
-                class="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold py-4 px-6 rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl flex items-center justify-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              <button type="submit" :disabled="isBooking || bookingSuccess"
+                class="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold py-4 px-6 rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl flex items-center justify-center disabled:opacity-60 disabled:shadow-none disabled:transform-none">
+                <div v-if="isBooking"
+                  class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                <svg v-else class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
-                Confirm Booking
+                {{ isBooking ? 'Processing...' : 'Confirm Booking' }}
               </button>
 
               <p class="text-center text-gray-500 text-sm mt-4">No credit card required to reserve</p>
-            </div>
+            </form>
           </div>
         </div>
 
@@ -209,15 +228,7 @@
         <div class="mt-12 bg-white rounded-xl shadow-md p-6 border border-gray-100">
           <h2 class="text-2xl font-bold text-gray-900 mb-6">Car Specifications</h2>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="text-center p-4 bg-gray-50 rounded-lg">
-              <svg class="w-8 h-8 text-blue-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
-                </path>
-              </svg>
-              <p class="text-sm text-gray-500">Engine</p>
-              <p class="font-semibold text-gray-900">2.0L Turbo</p>
-            </div>
+            <!-- Transmission -->
             <div class="text-center p-4 bg-gray-50 rounded-lg">
               <svg class="w-8 h-8 text-blue-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
@@ -225,8 +236,9 @@
                   d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
               </svg>
               <p class="text-sm text-gray-500">Transmission</p>
-              <p class="font-semibold text-gray-900">Automatic</p>
+              <p class="font-semibold text-gray-900">{{ result.car.specs?.transmission || 'N/A' }}</p>
             </div>
+            <!-- Fuel Type -->
             <div class="text-center p-4 bg-gray-50 rounded-lg">
               <svg class="w-8 h-8 text-blue-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
@@ -236,8 +248,9 @@
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
               </svg>
               <p class="text-sm text-gray-500">Fuel Type</p>
-              <p class="font-semibold text-gray-900">Gasoline</p>
+              <p class="font-semibold text-gray-900">{{ result.car.specs?.fuel || 'N/A' }}</p>
             </div>
+            <!-- Seats -->
             <div class="text-center p-4 bg-gray-50 rounded-lg">
               <svg class="w-8 h-8 text-blue-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
@@ -246,7 +259,17 @@
                 </path>
               </svg>
               <p class="text-sm text-gray-500">Seats</p>
-              <p class="font-semibold text-gray-900">5 People</p>
+              <p class="font-semibold text-gray-900">{{ result.car.specs?.seats || 'N/A' }} People</p>
+            </div>
+            <!-- Engine (Placeholder for now) -->
+            <div class="text-center p-4 bg-gray-50 rounded-lg">
+              <svg class="w-8 h-8 text-blue-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
+                </path>
+              </svg>
+              <p class="text-sm text-gray-500">Engine</p>
+              <p class="font-semibold text-gray-900">2.0L Turbo</p>
             </div>
           </div>
         </div>
@@ -257,19 +280,34 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '../stores/auth'
 import { useRoute } from 'vue-router';
-import { useQuery } from '@vue/apollo-composable';
+import { useQuery, useMutation } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
+import { ref } from 'vue';
 import NavbarComponent from '../components/layouts/NavbarComponent.vue';
 import FooterComponent from '../components/layouts/FooterComponent.vue';
 
-// 1. Get the current route object to access URL parameters
+// --- State and Setup ---
+const authStore = useAuthStore()
 const route = useRoute();
-
-// 2. Get the car's ID from the URL. It can be a string or an array, so we ensure it's a string.
 const carId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
+const TODAY = new Date().toISOString().split('T')[0];
 
-// 3. Define a new GraphQL query to get a SINGLE car by its ID
+const bookingForm = ref({
+  carId: carId,
+  pickupDate: '',
+  returnDate: '',
+  pickupLocation: 'GPO Office Nairobi',
+  // IMPORTANT: Placeholder Customer ID. In a real app, this should come from your authentication state (e.g., a logged-in user's ID).
+  customerID: authStore.user?.id,
+});
+
+const bookingSuccess = ref(false);
+
+// --- GraphQL Queries and Mutations ---
+
+// 1. UPDATED Car Query: Now includes 'specs' to correctly populate the specs section.
 const GET_CAR_BY_ID_QUERY = gql`
   query GetCarById($id: ID!) {
     car(id: $id) {
@@ -278,13 +316,80 @@ const GET_CAR_BY_ID_QUERY = gql`
       type
       image
       price
-      # Add any other fields you want to display
+      specs {
+        seats
+        transmission
+        fuel
+      }
     }
   }
 `;
 
-// 4. Execute the query, passing the carId as a variable
+// 2. Booking Mutation Definition
+const CREATE_BOOKING_MUTATION = gql`
+  mutation CreateBooking($input: CreateBookingInput!) {
+    createBooking(input: $input) {
+      _id
+      bookedAt
+      status
+      car {
+        name
+      }
+    }
+  }
+`;
+
+// 3. Execute Car Fetch Query
 const { result, loading, error } = useQuery(GET_CAR_BY_ID_QUERY, { id: carId });
+
+// 4. Initialize Booking Mutation Hook
+const { mutate: createBooking, loading: isBooking, error: bookingError, onDone: onBookingDone } = useMutation(CREATE_BOOKING_MUTATION);
+
+// 5. Handle successful mutation
+onBookingDone(() => {
+  bookingSuccess.value = true;
+});
+
+
+// --- Booking Logic ---
+const bookCar = async () => {
+  bookingSuccess.value = false;
+
+  // Client-side Validation
+  const { pickupDate, returnDate, pickupLocation, customerID } = bookingForm.value;
+
+  if (!pickupDate || !returnDate || !pickupLocation || !customerID) {
+    // Custom modal UI should be used here instead of alert() in a real app
+    console.error("Validation Error: Please fill in all required fields.");
+    return;
+  }
+
+  const pickup = new Date(pickupDate);
+  const dropoff = new Date(returnDate);
+
+  if (dropoff <= pickup) {
+    // Custom modal UI should be used here instead of alert() in a real app
+    console.error("Validation Error: Return date must be strictly after the pickup date.");
+    return;
+  }
+
+  // Call the mutation
+  try {
+    await createBooking({
+      input: {
+        carId: carId,
+        pickupDate: pickupDate,
+        returnDate: returnDate,
+        pickupLocation: pickupLocation,
+        customerID: customerID,
+      }
+    });
+    // Success handled by onBookingDone()
+  } catch (err) {
+    // The hook will update the reactive bookingError state
+    console.error("Booking failed:", err);
+  }
+};
 </script>
 
 <style scoped>
