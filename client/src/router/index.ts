@@ -7,6 +7,7 @@ import MarketplaceView from '@/views/MarketplaceView.vue';
 import RentCarView from '@/views/RentCarView.vue';
 import BookView from '@/views/BookView.vue';
 import ConsultView from '@/views/ConsultingView.vue';
+import ProfileView from '@/views/ProfileView.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/book/:id',
       name: 'BookView',
       component: BookView,
+    },
+    {
+      path: '/profile',
+      name: 'ProfileView',
+      component: ProfileView,
     },
     {
       path: '/consult',

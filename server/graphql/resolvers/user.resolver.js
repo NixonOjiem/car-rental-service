@@ -4,7 +4,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
 const { UserInputError } = require("apollo-server-express");
-const mongoose = require("mongoose"); // Add mongoose
+const mongoose = require("mongoose");
+// --- NEW IMPORT: Booking Model ---
+const Booking = require("../../models/booking.model");
 
 // Initialize Google Auth client
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -21,6 +23,26 @@ const generateToken = (user) => {
 };
 
 const userResolvers = {
+  // =============================================
+  // 1. FIELD RESOLVER FOR THE USER TYPE (TO GET BOOKINGS)
+  // =============================================
+  User: {
+    /**
+     * Resolves the 'bookings' field for a User object.
+     * It finds all Booking documents associated with the user's ID.
+     */
+    async bookings(user) {
+      // Find all bookings where the 'user' field matches the current user's ID
+      const bookings = await Booking.find({ user: user._id })
+        // Populate the 'car' reference to retrieve the car details
+        .populate("car")
+        .sort({ bookedAt: -1 }); // Optional: sort by newest first
+
+      return bookings;
+    },
+  },
+  // =============================================
+
   Query: {
     /// Add connection check
     users: async () => {
@@ -36,6 +58,18 @@ const userResolvers = {
       }
       return await User.findById(id);
     },
+    /**
+     * Resolves the main user profile query.
+     * The `User.bookings` resolver automatically handles the bookings data.
+     */
+    async userProfile(_, { id }) {
+      // Find the user by ID
+      const user = await User.findById(id);
+      if (!user) {
+        throw new Error("User not found.");
+      }
+      return user;
+    },
   },
 
   Mutation: {
@@ -44,57 +78,46 @@ const userResolvers = {
       // Check connection state
       if (mongoose.connection.readyState !== 1) {
         throw new Error("Database connection not ready");
-      }
-      // 1. Check if user already exists
+      } // 1. Check if user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         throw new UserInputError("An account with this email already exists.");
-      }
+      } // 2. Create and save the new user (password will be hashed by pre-save hook)
 
-      // 2. Create and save the new user (password will be hashed by pre-save hook)
       const newUser = new User({
         fullname,
         email,
         password,
         provider: "manual",
       });
-      const savedUser = await newUser.save();
+      const savedUser = await newUser.save(); // 3. Generate a token and return the AuthPayload
 
-      // 3. Generate a token and return the AuthPayload
-      const token = generateToken(savedUser);
-      //return { token, user: savedUser };
+      const token = generateToken(savedUser); //return { token, user: savedUser };
       return { token };
-    },
+    }, // --- Manual Login ---
 
-    // --- Manual Login ---
     loginUser: async (_, { email, password }) => {
       if (mongoose.connection.readyState !== 1) {
         throw new Error("Database connection not ready");
-      }
-      // 1. Find user by email, but also select the password field
+      } // 1. Find user by email, but also select the password field
       const user = await User.findOne({ email }).select("+password");
       if (!user || user.provider !== "manual") {
         throw new UserInputError("Invalid credentials or user not found.");
-      }
+      } // 2. Check if password matches
 
-      // 2. Check if password matches
       const isMatch = await user.matchPassword(password);
       if (!isMatch) {
         throw new UserInputError("Invalid credentials.");
-      }
+      } // 3. Generate a token and return the AuthPayload
 
-      // 3. Generate a token and return the AuthPayload
-      const token = generateToken(user);
-      //return { token, user };
+      const token = generateToken(user); //return { token, user };
       return { token };
-    },
+    }, // --- Google Login/Signup ---
 
-    // --- Google Login/Signup ---
     loginWithGoogle: async (_, { googleToken }) => {
       if (mongoose.connection.readyState !== 1) {
         throw new Error("Database connection not ready");
-      }
-      // 1. Verify the Google token
+      } // 1. Verify the Google token
       let googlePayload;
       try {
         const ticket = await client.verifyIdToken({
@@ -106,9 +129,8 @@ const userResolvers = {
         throw new UserInputError("Invalid Google Token. Please try again.");
       }
 
-      const { email, name, sub: googleId } = googlePayload;
+      const { email, name, sub: googleId } = googlePayload; // 2. Find or create the user
 
-      // 2. Find or create the user
       let user = await User.findOne({ email });
 
       if (user) {
@@ -116,12 +138,9 @@ const userResolvers = {
         // User exists. If they signed up manually, link their Google account.
         if (user.provider === "manual") {
           user.googleId = googleId;
-          user.provider = "google"; // Update their provider
-          // You might also want to update their name if it's different
-          // user.fullname = name;
+          user.provider = "google"; // Update their provider // You might also want to update their name if it's different // user.fullname = name;
           await user.save(); // Save the changes
-        }
-        // If they were already a google user, we just proceed.
+        } // If they were already a google user, we just proceed.
       } else {
         // If user does not exist, create a new one
         const newUser = new User({
@@ -131,11 +150,9 @@ const userResolvers = {
           provider: "google",
         });
         user = await newUser.save();
-      }
+      } // 3. Generate a token and return the AuthPayload
 
-      // 3. Generate a token and return the AuthPayload
-      const token = generateToken(user);
-      //return { token, user };
+      const token = generateToken(user); //return { token, user };
       return { token };
     },
   },
