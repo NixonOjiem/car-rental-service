@@ -17,7 +17,7 @@ const { carResolvers } = require("./graphql/resolvers/car.resolver");
 const { categoryTypeDefs } = require("./graphql/schema/category.schema");
 const { categoryResolvers } = require("./graphql/resolvers/category.resolver");
 const { bookingTypeDefs } = require("./graphql/schema/booking.schema");
-const { bookingResolvers } = require("./grapghql/resolvers/booking.resolver");
+const { bookingResolvers } = require("./graphql/resolvers/booking.resolver");
 const typeDefs = mergeTypeDefs([
   userTypeDefs,
   carTypeDefs,
