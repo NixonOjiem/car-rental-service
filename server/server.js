@@ -70,6 +70,9 @@ app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
+app.get("/car", (req, res) => {
+  res.json({ message: "Hello from the Node.js server!" });
+});
 
 async function main() {
   try {
@@ -89,9 +92,12 @@ async function main() {
     });
 
     await apolloServer.start();
-    apolloServer.applyMiddleware({ app, path: "/gql" });
+    apolloServer.applyMiddleware({ app, path: "/car/gql" });
 
-    app.get("/api/message", (req, res) => {
+    app.get("/car/api/message", (req, res) => {
+      res.json({ message: "Hello from the Node.js server!" });
+    });
+    app.get("/car", (req, res) => {
       res.json({ message: "Hello from the Node.js server!" });
     });
 
