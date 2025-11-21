@@ -8,6 +8,7 @@ const userTypeDefs = gql`
     provider: String!
     createdAt: String!
     updatedAt: String!
+    bookings: [Booking] # Array of bookings associated with the user
   }
 
   # This payload is returned on successful authentication
@@ -21,6 +22,7 @@ const userTypeDefs = gql`
     users: [User!]!
     # Fetches a single user by their ID
     user(id: ID!): User
+    userProfile(id: ID!): User
   }
 
   type Mutation {

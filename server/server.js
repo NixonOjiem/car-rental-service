@@ -16,11 +16,19 @@ const { carTypeDefs } = require("./graphql/schema/car.schema");
 const { carResolvers } = require("./graphql/resolvers/car.resolver");
 const { categoryTypeDefs } = require("./graphql/schema/category.schema");
 const { categoryResolvers } = require("./graphql/resolvers/category.resolver");
-const typeDefs = mergeTypeDefs([userTypeDefs, carTypeDefs, categoryTypeDefs]);
+const { bookingTypeDefs } = require("./graphql/schema/booking.schema");
+const { bookingResolvers } = require("./graphql/resolvers/booking.resolver");
+const typeDefs = mergeTypeDefs([
+  userTypeDefs,
+  carTypeDefs,
+  categoryTypeDefs,
+  bookingTypeDefs,
+]);
 const resolvers = mergeResolvers([
   userResolvers,
   carResolvers,
   categoryResolvers,
+  bookingResolvers,
 ]);
 
 const {
@@ -36,6 +44,7 @@ const allowedOrigins = [
   "http://lovehomemart.com",
   "http://localhost:5173", // Example: for a local Vite React app
   "http://localhost:3000", // Example: for another local server
+  "http://localhost:5174",
 ];
 
 const corsOptions = {
@@ -61,6 +70,9 @@ app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
+app.get("/car", (req, res) => {
+  res.json({ message: "Hello from the Node.js server!" });
+});
 
 async function main() {
   try {
@@ -80,9 +92,12 @@ async function main() {
     });
 
     await apolloServer.start();
-    apolloServer.applyMiddleware({ app, path: "/gql" });
+    apolloServer.applyMiddleware({ app, path: "/car/gql" });
 
-    app.get("/api/message", (req, res) => {
+    app.get("/car/api/message", (req, res) => {
+      res.json({ message: "Hello from the Node.js server!" });
+    });
+    app.get("/car", (req, res) => {
       res.json({ message: "Hello from the Node.js server!" });
     });
 
