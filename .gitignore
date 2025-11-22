@@ -2,3 +2,6 @@
 .netlify
 .idea
 .zip
+
+/client/.env
+/server/.env
