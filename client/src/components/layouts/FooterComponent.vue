@@ -15,7 +15,7 @@
         </div>
 
         <!-- Quick Links -->
-        <div>
+        <!-- <div>
           <h3 class="text-white font-semibold text-sm uppercase mb-4">Company</h3>
           <ul class="space-y-2 text-sm">
             <li><a href="#" class="hover:text-white transition">About Us</a></li>
@@ -23,7 +23,7 @@
             <li><a href="#" class="hover:text-white transition">FAQs</a></li>
             <li><a href="#" class="hover:text-white transition">Contact</a></li>
           </ul>
-        </div>
+        </div> -->
 
         <!-- Services -->
         <div>
