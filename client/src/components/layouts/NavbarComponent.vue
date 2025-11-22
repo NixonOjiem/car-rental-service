@@ -72,7 +72,7 @@ const authStore = useAuthStore()
 
 // 2. Get the router instance for navigation.
 const router = useRouter()
-console.log({ localStorage })
+//console.log({ localStorage })
 
 // 3. Define methods directly as constants.
 const goHome = () => {
@@ -80,10 +80,10 @@ const goHome = () => {
 }
 
 // Optional: You can still log to debug, but it's no longer in a place that blocks rendering.
-console.log({
-  user: authStore.user,      // In <script setup>, you don't need .value for the object itself
-  token: authStore.token
-});
+// console.log({
+//   user: authStore.user,      // In <script setup>, you don't need .value for the object itself
+//   token: authStore.token
+// });
 </script>
 
 <style scoped>
