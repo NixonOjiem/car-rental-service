@@ -18,7 +18,7 @@
           <li class="hover:text-[#00b4d8] transition-colors">
             <router-link to="/rent">Rent</router-link>
           </li>
-          <li class="hover:text-[#00b4d8] transition-colors">
+          <!-- <li class="hover:text-[#00b4d8] transition-colors">
             <router-link to="/consult">Consulting</router-link>
           </li>
           <li class="hover:text-[#00b4d8] transition-colors">
@@ -26,7 +26,7 @@
           </li>
           <li class="hover:text-[#00b4d8] transition-colors">
             <router-link to="#">Blog</router-link>
-          </li>
+          </li> -->
         </ul>
       </div>
 
