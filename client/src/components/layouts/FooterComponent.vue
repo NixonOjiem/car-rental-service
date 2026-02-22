@@ -10,6 +10,8 @@
             Your journey begins with the perfect ride. Explore luxury, power, and style from our fleet of premium
             vehicles.
           </p>
+          <a v-if="authStore.user" href="/profile"
+            class="mt-3 inline-block text-sm text-sky-400 hover:text-sky-300 transition">Visit profile page</a>
         </div>
 
         <!-- Quick Links -->
@@ -75,4 +77,7 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '../../stores/auth';
+const authStore = useAuthStore();
+
 </script>
